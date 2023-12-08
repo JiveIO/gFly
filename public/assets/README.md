@@ -1,0 +1,1 @@
+# Folder public/assets/
