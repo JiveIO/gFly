@@ -40,7 +40,9 @@ func sessionFactory(provider providerType) (session.Provider, error) {
 }
 
 func setupSession() {
-	if !utils.Getenv("SESSION_ENABLE", false) {
+	if utils.Getenv("SESSION_TYPE", "") == "" {
+		log.Trace("Disable Session")
+
 		return
 	}
 
@@ -60,5 +62,5 @@ func setupSession() {
 		log.Fatal(err)
 	}
 
-	log.Trace("Initialize session")
+	log.Trace("Initialize Session")
 }

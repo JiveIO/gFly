@@ -43,5 +43,5 @@ func setupLog() {
 		log.SetLevel(log.LevelPanic)
 	}
 
-	log.Trace("Setup log")
+	log.Trace("Setup Logs")
 }
