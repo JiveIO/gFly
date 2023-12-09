@@ -18,5 +18,5 @@ type HomePage struct {
 }
 
 func (m *HomePage) Handle(c *gfly.Ctx) error {
-	return c.Redirect("/index.html")
+	return c.HTML("<h2>Hello world</h2>")
 }

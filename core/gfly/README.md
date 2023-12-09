@@ -1,7 +1,5 @@
-# Router
+# gFly (Router + Http)
 
-    Copyright © 2023, Fasthttp Router
-    https://github.com/fasthttp/router
+    Copyright © 2023, gFly
+    https://www.gFly.dev
     All rights reserved.
-
-Fork from https://github.com/fasthttp/router
