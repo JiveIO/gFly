@@ -15,7 +15,7 @@ import (
 
 // Auto-register task into queue.
 func init() {
-	console.RegisterTask(&HelloTask{}, taskName)
+	console.RegisterTask(&HelloTask{}, "hello-world")
 }
 
 // ---------------------------------------------------------------
@@ -26,10 +26,8 @@ func init() {
 func NewHelloTask(message string) (HelloTaskPayload, string) {
 	return HelloTaskPayload{
 		Message: message,
-	}, taskName
+	}, "hello-world"
 }
-
-var taskName = "hello-world"
 
 // HelloTaskPayload Task payload.
 type HelloTaskPayload struct {
@@ -41,6 +39,7 @@ type HelloTask struct {
 	console.Task
 }
 
+// Dequeue Handle a task in queue.
 func (t HelloTask) Dequeue(ctx context.Context, task *asynq.Task) error {
 	// Decode task payload
 	var payload HelloTaskPayload
