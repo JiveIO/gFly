@@ -2,6 +2,7 @@ package console
 
 import (
 	"app/core/log"
+	"app/core/utils"
 	"github.com/robfig/cron/v3"
 )
 
@@ -12,23 +13,23 @@ type IJob interface {
 }
 
 // Job pool
-var jobs = make(map[string]IJob)
+var jobs []IJob
 
 // RegisterJob Register a new job to pool.
-func RegisterJob(name string, job IJob) {
-	jobs[name] = job
+func RegisterJob(job IJob) {
+	jobs = append(jobs, job)
 }
 
 func StartScheduler() {
 	c := cron.New(cron.WithSeconds())
 
 	// Define the Cron job schedule
-	for name, job := range jobs {
+	for _, job := range jobs {
 		_, err := c.AddFunc(job.GetTime(), job.Handle)
 		if err != nil {
 			return
 		}
-		log.Infof("Init schedule job %s", name)
+		log.Infof("Init schedule job %s", utils.ReflectType(job))
 	}
 
 	// Start the Cron job scheduler

@@ -2,7 +2,7 @@ package console
 
 import (
 	"app/core/log"
-	"fmt"
+	"app/core/utils"
 	"regexp"
 )
 
@@ -38,8 +38,14 @@ type CommandParameter map[string]interface{}
 var commands = make(map[string]ICommand)
 
 // RegisterCommand Register a new command to pool.
-func RegisterCommand(name string, cmd ICommand) {
-	commands[name] = cmd
+func RegisterCommand(cmd ICommand, name ...string) {
+	cmdName := utils.ReflectType(cmd)[1:]
+
+	if len(name) > 0 {
+		cmdName = name[0]
+	}
+
+	commands[cmdName] = cmd
 }
 
 func RunCommands(args []string) {
@@ -47,7 +53,7 @@ func RunCommands(args []string) {
 	cmd, ok := commands[cmdName]
 
 	if !ok {
-		fmt.Println("Don't see commands name", cmdName)
+		log.Infof("Don't see command name `%s`", cmdName)
 		return
 	}
 
@@ -62,7 +68,7 @@ func RunCommands(args []string) {
 
 	err := cmd.Validate(parameters)
 	if err != nil {
-		fmt.Printf("Error: %v", err)
+		log.Errorf("Error: %v", err)
 
 		return
 	}

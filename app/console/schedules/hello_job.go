@@ -10,17 +10,14 @@ import (
 // 					Register job.
 // ---------------------------------------------------------------
 
-// Auto-register task into queue.
+// Auto-register job into scheduler.
 func init() {
-	console.RegisterJob(HelloJobName, &HelloJob{})
+	console.RegisterJob(&HelloJob{})
 }
 
 // ---------------------------------------------------------------
 // 					HelloJob struct.
 // ---------------------------------------------------------------
-
-// HelloJobName Define job name
-const HelloJobName = "hello-world"
 
 // HelloJob struct for hello job.
 type HelloJob struct{}

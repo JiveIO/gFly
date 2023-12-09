@@ -14,15 +14,12 @@ import (
 
 // Auto-register command.
 func init() {
-	console.RegisterCommand(HelloCommandName, &HelloCommand{})
+	console.RegisterCommand(&HelloCommand{}, "hello-world")
 }
 
 // ---------------------------------------------------------------
 // 					HelloCommand struct.
 // ---------------------------------------------------------------
-
-// HelloCommandName Define command name
-const HelloCommandName = "hello-world"
 
 // HelloCommand struct for hello command.
 type HelloCommand struct {
@@ -32,10 +29,7 @@ type HelloCommand struct {
 // Handle Process command.
 func (c *HelloCommand) Handle() {
 	// Dispatch a task into Queue.
-	_, err := queues.DispatchHelloTask("Hello world")
-	if err != nil {
-		log.Errorf("Can not dispatch HelloTask %v", err)
-	}
+	console.DispatchTask(queues.NewHelloTask("Hello"))
 
 	log.Infof("HellCommand :: Run at %s", time.Now().Format("2006-01-02 15:04:05"))
 }
