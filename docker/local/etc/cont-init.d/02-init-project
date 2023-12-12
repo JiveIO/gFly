@@ -1,4 +1,0 @@
-#!/usr/bin/with-contenv bash
-
-s6-setuidgid gfly /etc/cont-init.d/.configuration.sh
-s6-setuidgid gfly /etc/cont-init.d/.init-app.sh

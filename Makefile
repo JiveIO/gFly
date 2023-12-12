@@ -3,7 +3,7 @@
 APP_NAME = app
 CLI_NAME = artisan
 BUILD_DIR = $(PWD)/build
-MIGRATION_FOLDER = $(PWD)/database/migrations
+MIGRATION_FOLDER = $(PWD)/database/migrations/postgresql
 DATABASE_URL = postgres://vinh:@localhost:5432/gfly?sslmode=disable
 
 all: clean critic security lint test swag build
@@ -62,9 +62,45 @@ release:
 	# 64-bit - Linux ARM
 	GOOS=linux GOARCH=arm64 go build -o $(BUILD_DIR)/$(APP_NAME)-arm64-linux *.go
 
-docker.build:
-	docker-compose -f docker/docker-compose.yml build --no-cache base
+docker.image:
 	docker-compose -f docker/docker-compose.yml build --no-cache web
+
+docker.start: docker.run docker.logs
+docker.checking: docker.critic docker.security docker.lint
+
+docker.migrate.up:
+	docker exec -it gfly-web migrate -path /app/database/migrations/mysql -database "mysql://user:secret@tcp(db:3306)/gfly" up
+
+docker.migrate.down:
+	docker exec -it gfly-web migrate -path /app/database/migrations/mysql -database "mysql://user:secret@tcp(db:3306)/gfly" down
+
+docker.critic:
+	docker exec -it gfly-web gocritic check -enableAll -disable=unnamedResult,unlabelStmt,hugeParam,singleCaseSwitch ./...
+
+docker.security:
+	docker exec -it gfly-web gosec ./...
+
+docker.lint:
+	docker exec -it gfly-web golangci-lint run ./...
+
+docker.test:
+	docker exec -it gfly-web go test -v -timeout 30s -coverprofile=cover.out -cover ./...
+	docker exec -it gfly-web go tool cover -func=cover.out
+
+docker.build: docker.checking docker.test
+	docker exec -it gfly-web build_app
+	docker exec -it gfly-web build_artisan
+
+docker.release:
+	docker exec -it gfly-web release_windows_64
+	docker exec -it gfly-web release_mac_amd64
+	docker exec -it gfly-web release_mac_arm64
+	docker exec -it gfly-web release_linux_amd64
+	docker exec -it gfly-web release_linux_arm64
+
+docker.swag:
+	docker exec -it gfly-web swag init
+	docker exec -it gfly-web cp /app/docs/swagger.json /app/public/docs
 
 docker.run:
 	docker-compose -f docker/docker-compose.yml -p gfly up -d web
@@ -73,9 +109,6 @@ docker.logs:
 	docker-compose -f docker/docker-compose.yml -p gfly logs -f web
 
 docker.shell:
-	docker-compose -f docker/docker-compose.yml -p gfly exec --user gfly web bash
-
-docker.root:
 	docker-compose -f docker/docker-compose.yml -p gfly exec web bash
 
 docker.stop:
@@ -83,3 +116,5 @@ docker.stop:
 
 docker.destroy:
 	docker-compose -f docker/docker-compose.yml -p gfly down
+
+docker.drop: docker.stop docker.destroy

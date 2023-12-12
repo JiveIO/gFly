@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv bash
+
+s6-setuidgid root /etc/cont-init.d/.configuration.sh
+s6-setuidgid root /etc/cont-init.d/.run-application.sh
