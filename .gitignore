@@ -37,3 +37,4 @@ Dev.md
 Dev/
 .env
 *.local
+.cache

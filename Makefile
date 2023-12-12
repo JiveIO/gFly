@@ -62,3 +62,24 @@ release:
 	# 64-bit - Linux ARM
 	GOOS=linux GOARCH=arm64 go build -o $(BUILD_DIR)/$(APP_NAME)-arm64-linux *.go
 
+docker.build:
+	docker-compose -f docker/docker-compose.yml build --no-cache base
+	docker-compose -f docker/docker-compose.yml build --no-cache web
+
+docker.run:
+	docker-compose -f docker/docker-compose.yml -p gfly up -d web
+
+docker.logs:
+	docker-compose -f docker/docker-compose.yml -p gfly logs -f web
+
+docker.shell:
+	docker-compose -f docker/docker-compose.yml -p gfly exec --user gfly web bash
+
+docker.root:
+	docker-compose -f docker/docker-compose.yml -p gfly exec web bash
+
+docker.stop:
+	docker-compose -f docker/docker-compose.yml -p gfly kill
+
+docker.destroy:
+	docker-compose -f docker/docker-compose.yml -p gfly down

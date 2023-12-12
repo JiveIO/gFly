@@ -1,0 +1,75 @@
+version: '2.1'
+services:
+  base:
+    build:
+      context: ""
+      dockerfile: Dockerfile.base
+    image: gfly-base
+
+  web:
+    build:
+      context: ""
+      dockerfile: Dockerfile
+      args:
+        hostUID: 1000
+        hostGID: 1000
+    image: gfly-web
+    hostname: gfly-web
+    container_name: gfly-web
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    labels:
+      SERVICE_NAME: gfly-web
+      SERVICE_80_NAME: gfly-web
+      SERVICE_443_NAME: gfly-web
+    ports:
+     - '7789:7789'
+    depends_on:
+      db:
+        condition: service_healthy
+      mail:
+        condition: service_started
+      redis:
+        condition: service_started
+    environment:
+      APP_ENV: local
+    volumes:
+      - ../:/home/gfly/app
+
+  db:
+    image: mysql:8.0.25
+    hostname: gfly-db
+    container_name: gfly-db
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: gfly
+      MYSQL_USER: user
+      MYSQL_PASSWORD: secret
+    labels:
+      SERVICE_NAME: gfly-db
+      SERVICE_3306_NAME: gfly-db
+      SERVICE_33060_NAME: gfly-db
+    ports:
+      - '33060:3306'
+    healthcheck:
+      test: "/usr/bin/mysql --user=user --password=secret --execute \"SHOW DATABASES;\""
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci --default-authentication-plugin=mysql_native_password
+
+  mail:
+    image: mailhog/mailhog
+    hostname: gfly-mail
+    container_name: gfly-mail
+    labels:
+        SERVICE_NAME: gfly-mail
+    ports:
+      - '8025:8025'
+
+  redis:
+    image: redis:6.2.5-alpine3.14
+    hostname: gfly-redis
+    container_name: gfly-redis
+    labels:
+      SERVICE_NAME: gfly-redis
