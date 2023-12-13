@@ -8,7 +8,7 @@ import (
 // 											Home page
 // ===========================================================================================================
 
-// NewHomePage As a constructor to create new Page.
+// NewHomePage As a constructor to create a Home Page.
 func NewHomePage() *HomePage {
 	return &HomePage{}
 }
@@ -18,5 +18,5 @@ type HomePage struct {
 }
 
 func (m *HomePage) Handle(c *gfly.Ctx) error {
-	return c.HTML("<h2>Hello world</h2>")
+	return c.Redirect("/index.html")
 }
