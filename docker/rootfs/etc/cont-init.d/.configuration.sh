@@ -1,6 +1,6 @@
 #!/usr/bin/with-contenv bash
 
-source /root/.bashrc
+source /home/gfly/.bashrc
 echo -e "${BLUE}---------- Configuration ----------${NC}"
 
 echo -e "${GREEN} 1. Generate .env file from template .env.docker ${NC}"

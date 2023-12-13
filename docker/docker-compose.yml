@@ -1,10 +1,13 @@
-version: '2.1'
+version: '3.2'
 
 services:
   web:
     build:
       context: ""
       dockerfile: Dockerfile
+      args:
+        hostUID: 1000
+        hostGID: 1000
     image: gfly-web
     hostname: gfly-web
     container_name: gfly-web
@@ -26,7 +29,7 @@ services:
     environment:
       APP_ENV: local
     volumes:
-      - ../:/app
+      - ../:/home/gfly/app
 
   db:
     image: mysql:8.0.25
