@@ -87,17 +87,6 @@ docker.test:
 	docker exec -it gfly-web go test -v -timeout 30s -coverprofile=cover.out -cover ./...
 	docker exec -it gfly-web go tool cover -func=cover.out
 
-docker.build: docker.checking docker.test
-	docker exec -it gfly-web build_app
-	docker exec -it gfly-web build_artisan
-
-docker.release:
-	docker exec -it gfly-web release_windows_64
-	docker exec -it gfly-web release_mac_amd64
-	docker exec -it gfly-web release_mac_arm64
-	docker exec -it gfly-web release_linux_amd64
-	docker exec -it gfly-web release_linux_arm64
-
 docker.swag:
 	docker exec -it gfly-web swag init
 	docker exec -it gfly-web cp /app/docs/swagger.json /app/public/docs
@@ -118,3 +107,7 @@ docker.destroy:
 	docker-compose -f docker/docker-compose.yml -p gfly down
 
 docker.drop: docker.stop docker.destroy
+
+docker.build: docker.checking docker.test docker.shell
+
+docker.release: docker.checking docker.test docker.shell
