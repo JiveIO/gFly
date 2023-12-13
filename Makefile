@@ -3,8 +3,11 @@
 APP_NAME = app
 CLI_NAME = artisan
 BUILD_DIR = $(PWD)/build
-MIGRATION_FOLDER = $(PWD)/database/migrations/postgresql
-DATABASE_URL = postgres://vinh:@localhost:5432/gfly?sslmode=disable
+DOCKER_PATH= /home/gfly/app
+#MIGRATION_FOLDER = $(PWD)/database/migrations/postgresql
+#DATABASE_URL = postgres://vinh:@localhost:5432/gfly?sslmode=disable
+MIGRATION_FOLDER = $(DOCKER_PATH)/database/migrations/mysql
+DATABASE_URL = mysql://user:secret@tcp(db:3306)/gfly
 
 all: clean critic security lint test swag build
 
@@ -63,33 +66,33 @@ release:
 	GOOS=linux GOARCH=arm64 go build -o $(BUILD_DIR)/$(APP_NAME)-arm64-linux *.go
 
 docker.image:
-	docker-compose -f docker/docker-compose.yml build --no-cache web
+	docker-compose -f docker/docker-compose.yml build --no-cache --build-arg hostUID=1000 --build-arg hostGID=1000 web
 
 docker.start: docker.run docker.logs
 docker.checking: docker.critic docker.security docker.lint
 
 docker.migrate.up:
-	docker exec -it gfly-web migrate -path /app/database/migrations/mysql -database "mysql://user:secret@tcp(db:3306)/gfly" up
+	docker exec -it --user gfly gfly-web migrate -path $(MIGRATION_FOLDER) -database "$(DATABASE_URL)" up
 
 docker.migrate.down:
-	docker exec -it gfly-web migrate -path /app/database/migrations/mysql -database "mysql://user:secret@tcp(db:3306)/gfly" down
+	docker exec -it --user gfly gfly-web migrate -path $(MIGRATION_FOLDER) -database "$(DATABASE_URL)" down
 
 docker.critic:
-	docker exec -it gfly-web gocritic check -enableAll -disable=unnamedResult,unlabelStmt,hugeParam,singleCaseSwitch ./...
+	docker exec -it --user gfly gfly-web gocritic check -enableAll -disable=unnamedResult,unlabelStmt,hugeParam,singleCaseSwitch ./...
 
 docker.security:
-	docker exec -it gfly-web gosec ./...
+	docker exec -it --user gfly gfly-web gosec ./...
 
 docker.lint:
-	docker exec -it gfly-web golangci-lint run ./...
+	docker exec -it --user gfly gfly-web golangci-lint run ./...
 
 docker.test:
-	docker exec -it gfly-web go test -v -timeout 30s -coverprofile=cover.out -cover ./...
-	docker exec -it gfly-web go tool cover -func=cover.out
+	docker exec -it --user gfly gfly-web go test -v -timeout 30s -coverprofile=cover.out -cover ./...
+	docker exec -it --user gfly gfly-web go tool cover -func=cover.out
 
 docker.swag:
-	docker exec -it gfly-web swag init
-	docker exec -it gfly-web cp /app/docs/swagger.json /app/public/docs
+	docker exec -it --user gfly gfly-web swag init
+	docker exec -it --user gfly gfly-web cp $(DOCKER_PATH)/docs/swagger.json $(DOCKER_PATH)/public/docs
 
 docker.run:
 	docker-compose -f docker/docker-compose.yml -p gfly up -d web
@@ -98,15 +101,18 @@ docker.logs:
 	docker-compose -f docker/docker-compose.yml -p gfly logs -f web
 
 docker.shell:
+	docker-compose -f docker/docker-compose.yml -p gfly exec --user gfly web bash
+
+docker.root:
 	docker-compose -f docker/docker-compose.yml -p gfly exec web bash
 
 docker.stop:
 	docker-compose -f docker/docker-compose.yml -p gfly kill
 
-docker.destroy:
+docker.delete:
 	docker-compose -f docker/docker-compose.yml -p gfly down
 
-docker.drop: docker.stop docker.destroy
+docker.destroy: docker.stop docker.delete
 
 docker.build: docker.checking docker.test docker.shell
 

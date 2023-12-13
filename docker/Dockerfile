@@ -4,13 +4,18 @@ FROM golang:${GO_VERSION}-alpine${ALPINE_VERSION}
 
 EXPOSE 80 443
 ENTRYPOINT ["/init"]
-WORKDIR /app
-VOLUME /app
+WORKDIR /home/gfly/app
+VOLUME /home/gfly/app
 
 # Runtime distribution filename.
 ARG BUILD_DATE
 ARG VCS_REF
 ARG BUILD_VERSION
+
+ARG hostUID=1000
+ARG hostGID=1000
+ENV hostUID=$hostUID
+ENV hostGID=$hostGID
 
 # Labels.
 LABEL com.jivecode.schema-version="1.0" \
@@ -29,9 +34,8 @@ RUN apk add --no-cache bash \
 	curl
 
 # Create a group and user `gfly`
-#RUN addgroup -S gfly && adduser -S gfly -G gfly
-# Tell docker that all future commands should run as the `gfly` user
-#USER gfly
+RUN addgroup -g $hostGID gfly &&\
+    adduser -S -u $hostUID -G gfly -h /home/gfly -s /sbin/nologin gfly
 
 # Install Go tools
 RUN go install -v github.com/go-critic/go-critic/cmd/gocritic@latest
@@ -50,3 +54,11 @@ RUN curl -LSs -o /tmp/s6-overlay-amd64.tar.gz \
 
 # Copy configuration files
 ADD rootfs /
+
+# The folder need when run `air`, `go`, `gocritic` or some else via `gfly` account
+ENV GOPATH=/go
+ENV GFLY_HOME=/home/gfly
+
+RUN chown -R $hostUID:$hostGID $GOPATH
+RUN chown -R $hostUID:$hostGID $GFLY_HOME
+

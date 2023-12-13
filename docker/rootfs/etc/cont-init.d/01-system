@@ -5,5 +5,8 @@ chmod -R +x /etc/cont-init.d
 chmod -R +x /etc/services.d
 
 echo "Should be able to write uploaded files to temporary directory"
-chmod 775 /tmp
-chmod 775 /var/log
+chmod -R 777 /tmp
+chmod -R 777 /var/log
+
+# The folder need when run `go` tools via `gfly` account
+chmod -R 777 /root/.cache
