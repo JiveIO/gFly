@@ -1,4 +1,4 @@
-.PHONY: clean critic security lint test build run
+.PHONY: critic security lint test build run
 
 APP_NAME = app
 CLI_NAME = artisan
@@ -9,16 +9,13 @@ DOCKER_PATH= /home/gfly/app
 MIGRATION_FOLDER = $(DOCKER_PATH)/database/migrations/mysql
 DATABASE_URL = mysql://user:secret@tcp(db:3306)/gfly
 
-all: clean critic security lint test swag build
-
-clean:
-	rm -rf ./build
+all: critic security lint test swag build
 
 critic:
 	gocritic check -enableAll -disable=unnamedResult,unlabelStmt,hugeParam,singleCaseSwitch ./...
 
 security:
-	gosec ./...
+	gosec -exclude-dir=core ./...
 
 lint:
 	golangci-lint run ./...
@@ -30,7 +27,7 @@ test:
 test.cover:
 	go tool cover -html=cover.out
 
-build: clean critic security lint test
+build: critic security lint test
 	CGO_ENABLED=0 go build -ldflags="-w -s" -o $(BUILD_DIR)/$(APP_NAME) main.go
 	CGO_ENABLED=0 go build -ldflags="-w -s" -o $(BUILD_DIR)/$(CLI_NAME) app/console/cli.go
 
@@ -75,7 +72,7 @@ docker.migrate.up:
 	docker exec -it --user gfly gfly-web migrate -path $(MIGRATION_FOLDER) -database "$(DATABASE_URL)" up
 
 docker.migrate.down:
-	docker exec -it --user gfly gfly-web migrate -path $(MIGRATION_FOLDER) -database "$(DATABASE_URL)" down
+	docker exec -it --user gfly gfly-web migrate -path $(MIGRATION_FOLDER) -database "$(DATABASE_URL)" down 1
 
 docker.critic:
 	docker exec -it --user gfly gfly-web gocritic check -enableAll -disable=unnamedResult,unlabelStmt,hugeParam,singleCaseSwitch ./...

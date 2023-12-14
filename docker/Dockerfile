@@ -41,7 +41,7 @@ RUN addgroup -g $hostGID gfly &&\
 RUN go install -v github.com/go-critic/go-critic/cmd/gocritic@latest
 RUN go install github.com/swaggo/swag/cmd/swag@latest
 RUN go install github.com/cosmtrek/air@latest
-RUN curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.18.0
+RUN curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.18.2
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.55.2
 RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz && \
     mv migrate $(go env GOPATH)/bin/migrate
