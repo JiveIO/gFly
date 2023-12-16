@@ -39,10 +39,17 @@ type key int
 const ProviderParamKey key = iota
 
 func init() {
+	// Build Redis connection URL.
+	redisConnURL := fmt.Sprintf(
+		"%s:%d",
+		utils.Getenv("REDIS_HOST", "localhost"),
+		utils.Getenv("REDIS_PORT", 6379),
+	)
+
 	// Create session
 	provider, _ := redis.New(redis.Config{
-		KeyPrefix:       utils.Getenv("SESSION_OAUTH_KEY", SessionName),
-		Addr:            utils.Getenv("SESSION_REDIS_URL", "127.0.0.1:6379"),
+		KeyPrefix:       SessionName,
+		Addr:            redisConnURL,
 		PoolSize:        8,
 		ConnMaxIdleTime: 30 * time.Second,
 	})

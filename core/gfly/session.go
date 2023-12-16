@@ -7,6 +7,7 @@ import (
 	"app/core/session/providers/memory"
 	"app/core/session/providers/redis"
 	"app/core/utils"
+	"fmt"
 	"time"
 )
 
@@ -26,9 +27,16 @@ const (
 func sessionFactory(provider providerType) (session.Provider, error) {
 	switch provider {
 	case redisProvider:
+		// Build Redis connection URL.
+		redisConnURL := fmt.Sprintf(
+			"%s:%d",
+			utils.Getenv("REDIS_HOST", "localhost"),
+			utils.Getenv("REDIS_PORT", 6379),
+		)
+
 		return redis.New(redis.Config{
 			KeyPrefix:       utils.Getenv("SESSION_KEY", "gfly_session"),
-			Addr:            utils.Getenv("SESSION_REDIS_URL", "127.0.0.1:6379"),
+			Addr:            redisConnURL,
 			PoolSize:        8,
 			ConnMaxIdleTime: 30 * time.Second,
 		})
