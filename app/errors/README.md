@@ -1,1 +1,1 @@
-# Folder app/exceptions/
+# Folder app/errors/

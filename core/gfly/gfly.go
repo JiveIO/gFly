@@ -111,18 +111,7 @@ func (fly *gFly) serveFastHTTP(ctx *fasthttp.RequestCtx) {
 		data: map[string]any{},
 	}
 
-	// Handle global middlewares
-	var err error = nil
-	for _, m := range fly.middlewares {
-		err = m(handlerCtx)
-		if err != nil {
-			break
-		}
-	}
-
-	if err == nil {
-		_ = fly.router.Handler(handlerCtx)
-	}
+	_ = fly.router.Handler(handlerCtx)
 }
 
 // errorHandler Server error handler.
@@ -161,11 +150,17 @@ type IFlyMiddleware interface {
 }
 
 // Use Middleware for global (All requests)
+// Example
+//
+//	group.Use(middleware.RuleMiddlewareFunc, middleware.AuthMiddlewareFunc)
 func (fly *gFly) Use(middlewares ...MiddlewareHandler) {
 	fly.middlewares = append(fly.middlewares, middlewares...)
 }
 
 // Middleware is a shortcut for Middleware.Group(middlewares ...MiddlewareHandler)
+// Example
+//
+//	group.POST("/one", gfly.IFly.Middleware(middleware.RuleMiddlewareFunc)(api.NewDefaultApi()))
 func (fly *gFly) Middleware(middlewares ...MiddlewareHandler) func(IHandler) IHandler {
 	return fly.middleware.Group(middlewares...)
 }
@@ -202,54 +197,67 @@ type IFlyRouter interface {
 
 // GET is a shortcut for Router.GET(path, handler)
 func (fly *gFly) GET(path string, handler IHandler) {
-	fly.router.GET(path, handler)
+	fly.router.GET(path, fly.wrapMiddlewares(handler))
 }
 
 // HEAD is a shortcut for Router.HEAD(path, handler)
 func (fly *gFly) HEAD(path string, handler IHandler) {
-	fly.router.HEAD(path, handler)
+	fly.router.HEAD(path, fly.wrapMiddlewares(handler))
 }
 
 // POST is a shortcut for Router.POST(path, handler)
 func (fly *gFly) POST(path string, handler IHandler) {
-	fly.router.POST(path, handler)
+	fly.router.POST(path, fly.wrapMiddlewares(handler))
 }
 
 // PUT is a shortcut for Router.PUT(path, handler)
 func (fly *gFly) PUT(path string, handler IHandler) {
-	fly.router.PUT(path, handler)
+	fly.router.PUT(path, fly.wrapMiddlewares(handler))
 }
 
 // PATCH is a shortcut for Router.PATCH(path, handler)
 func (fly *gFly) PATCH(path string, handler IHandler) {
-	fly.router.PATCH(path, handler)
+	fly.router.PATCH(path, fly.wrapMiddlewares(handler))
 }
 
 // DELETE is a shortcut for Router.DELETE(path, handler)
 func (fly *gFly) DELETE(path string, handler IHandler) {
-	fly.router.DELETE(path, handler)
+	fly.router.DELETE(path, fly.wrapMiddlewares(handler))
 }
 
 // CONNECT is a shortcut for Router.CONNECT(path, handler)
 func (fly *gFly) CONNECT(path string, handler IHandler) {
-	fly.router.CONNECT(path, handler)
+	fly.router.CONNECT(path, fly.wrapMiddlewares(handler))
 }
 
 // OPTIONS is a shortcut for Router.OPTIONS(path, handler)
 func (fly *gFly) OPTIONS(path string, handler IHandler) {
-	fly.router.OPTIONS(path, handler)
+	fly.router.OPTIONS(path, fly.wrapMiddlewares(handler))
 }
 
 // TRACE is a shortcut for Router.TRACE(path, handler)
 func (fly *gFly) TRACE(path string, handler IHandler) {
-	fly.router.TRACE(path, handler)
+	fly.router.TRACE(path, fly.wrapMiddlewares(handler))
 }
 
 // Group Create a group Handler functions.
 func (fly *gFly) Group(path string, groupFunc func(*Group)) {
 	group := fly.router.Group(path)
 
+	// Auto append middleware from gfly to the group
+	group.middlewares = fly.middlewares
+
 	groupFunc(group)
+}
+
+func (fly *gFly) wrapMiddlewares(handler IHandler) IHandler {
+	if len(fly.middlewares) > 0 {
+		middlewareGroup := NewMiddleware()
+
+		return middlewareGroup.Group(fly.middlewares...)(handler)
+	}
+
+	return handler
 }
 
 // ServeFiles Serve static files from the given file system root is `./public`

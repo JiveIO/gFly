@@ -136,6 +136,11 @@ func (g *Group) TRACE(path string, handler IHandler) {
 // Group Create a group Handler functions.
 func (g *Group) Group(path string, groupFunc func(*Group)) {
 	group := g.router.Group(g.prefix + path)
+	// Auto append middleware from parent to children
+	// Let example have a parent group have prefix url "/user" have 2 middleware functions: A, B.
+	// Now So, now create a new subgroup have prefix url "/info". So, all handlers of subgroup "/info"
+	// must be affected by 2 middlewares A, B from a parent group "/user"
+	group.middlewares = g.middlewares
 
 	groupFunc(group)
 }
