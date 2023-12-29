@@ -7,6 +7,9 @@ import (
 	"github.com/google/uuid"
 )
 
+// TableUser Table name
+const TableUser = "users"
+
 // User struct to describe a user object.
 type User struct {
 	ID           uuid.UUID    `db:"id" json:"id" validate:"required,uuid"`

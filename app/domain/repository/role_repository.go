@@ -3,6 +3,7 @@ package repository
 import (
 	"app/app/domain/models"
 	"app/core/db"
+	"app/core/fluentsql"
 	"github.com/google/uuid"
 	"time"
 )
@@ -18,13 +19,15 @@ func (q *RoleRepository) GetRoleBySlug(slug string) (models.Role, error) {
 	// Define role variable.
 	role := models.Role{}
 
-	// Define query string.
-	query := `SELECT * FROM roles WHERE slug=$1;`
+	// Get role by slug
+	err := q.DB.FluentGet(func(query fluentsql.SelectBuilder) fluentsql.SelectBuilder {
+		return query.
+			From(models.TableRole).
+			Where(fluentsql.Eq{"slug": slug})
+	}, &role)
 
-	// Send query to database.
-	err := q.DB.Get(&role, query, slug)
 	if err != nil {
-		// Return empty object and error.
+		// Return an empty object and error.
 		return role, err
 	}
 
@@ -43,7 +46,7 @@ func (q *RoleRepository) GetRolesByUserID(userID uuid.UUID) ([]models.Role, erro
 	// Send query to database.
 	err := q.DB.Select(&roles, query, userID)
 	if err != nil {
-		// Return empty object and error.
+		// Return an empty object and error.
 		return nil, err
 	}
 
@@ -56,23 +59,23 @@ func (q *RoleRepository) AddRoleForUserID(userID uuid.UUID, slug string) error {
 	// Define role variable.
 	role := models.Role{}
 
-	// Define query string.
-	query := `SELECT * FROM roles WHERE slug=$1;`
+	// Get role by slug
+	err := q.DB.FluentGet(func(query fluentsql.SelectBuilder) fluentsql.SelectBuilder {
+		return query.
+			From(models.TableRole).
+			Where(fluentsql.Eq{"slug": slug})
+	}, &role)
 
-	// Send query to database.
-	err := q.DB.Get(&role, query, slug)
 	if err != nil {
 		return err
 	}
 
-	// Define query string.
-	query = `INSERT INTO user_roles(id, role_id, user_id, created_at) VALUES ($1, $2, $3, $4)`
-
-	// Send query to database.
-	_, err = q.DB.Exec(
-		query,
-		uuid.New(), role.ID, userID, time.Now(),
-	)
+	// Insert user
+	_, err = q.DB.FluentInsert(func(query fluentsql.InsertBuilder) fluentsql.InsertBuilder {
+		return query.
+			Columns("id", "role_id", "user_id", "created_at").
+			Values(uuid.New(), role.ID, userID, time.Now())
+	}, models.TableRole)
 
 	if err != nil {
 		// Return only error.

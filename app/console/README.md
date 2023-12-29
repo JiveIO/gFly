@@ -2,7 +2,6 @@
 
 Use CLI tool `./build/artisan` to run `Queue`, `Schedule`, `Command`.
 
-
 gFly's console configuration options are stored in your application's `.env` configuration file. Make sure Redis server ready
 
 ```bash

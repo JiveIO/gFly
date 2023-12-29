@@ -18,13 +18,14 @@ func (q *UserRepository) GetUserByID(id uuid.UUID) (models.User, error) {
 	// Define User variable.
 	user := models.User{}
 
+	// Get User by ID
 	err := q.DB.FluentGet(func(query fluentsql.SelectBuilder) fluentsql.SelectBuilder {
 		return query.
-			From("users").
+			From(models.TableUser).
 			Where(fluentsql.Eq{"id": id})
 	}, &user)
 
-	// Return empty object and error.
+	// Return an empty object and error.
 	if err != nil {
 		return user, err
 	}
@@ -38,14 +39,15 @@ func (q *UserRepository) GetUserByEmail(email string) (models.User, error) {
 	// Define User variable.
 	user := models.User{}
 
+	// Get User by Email
 	err := q.DB.FluentGet(func(query fluentsql.SelectBuilder) fluentsql.SelectBuilder {
 		return query.
-			From("users").
+			From(models.TableUser).
 			Where(fluentsql.Eq{"email": email})
 	}, &user)
 
 	if err != nil {
-		// Return empty object and error.
+		// Return an empty object and error.
 		return user, err
 	}
 
@@ -55,12 +57,12 @@ func (q *UserRepository) GetUserByEmail(email string) (models.User, error) {
 
 // CreateUser a query for creating a new user by given user data.
 func (q *UserRepository) CreateUser(u *models.User) error {
-	// Define query string.
+	// Insert user
 	_, err := q.DB.FluentInsert(func(query fluentsql.InsertBuilder) fluentsql.InsertBuilder {
 		return query.
 			Columns("id", "email", "password_hash", "fullname", "phone", "token", "user_status", "created_at", "updated_at").
 			Values(u.ID, u.Email, u.PasswordHash, u.Fullname, u.Phone, u.Token, u.UserStatus, u.CreatedAt, u.UpdatedAt)
-	}, "users")
+	}, models.TableUser)
 
 	if err != nil {
 		return err
@@ -72,7 +74,7 @@ func (q *UserRepository) CreateUser(u *models.User) error {
 
 // UpdateUser a query for updating a user by given user data.
 func (q *UserRepository) UpdateUser(u *models.User) error {
-	// Define query string.
+	// Update user
 	_, err := q.DB.FluentUpdate(func(query fluentsql.UpdateBuilder) fluentsql.UpdateBuilder {
 		return query.
 			Set("email", u.Email).
@@ -83,7 +85,7 @@ func (q *UserRepository) UpdateUser(u *models.User) error {
 			Set("user_status", u.UserStatus).
 			Set("updated_at", u.UpdatedAt).
 			Where(fluentsql.Eq{"id": u.ID})
-	}, "users")
+	}, models.TableUser)
 
 	if err != nil {
 		return err
@@ -95,11 +97,11 @@ func (q *UserRepository) UpdateUser(u *models.User) error {
 
 // DeleteUser a query for updating a user by given user data.
 func (q *UserRepository) DeleteUser(u *models.User) error {
-	// Define query string.
+	// Update user by ID
 	_, err := q.DB.FluentDelete(func(query fluentsql.DeleteBuilder) fluentsql.DeleteBuilder {
 		return query.
 			Where(fluentsql.Eq{"id": u.ID})
-	}, "users")
+	}, models.TableUser)
 
 	if err != nil {
 		return err
@@ -120,15 +122,16 @@ func (q *UserRepository) SelectUser(page, limit uint64) ([]*models.User, int, er
 		offset = (page - 1) * limit
 	}
 
+	// Update users
 	err := q.DB.FluentSelect(func(query fluentsql.SelectBuilder) fluentsql.SelectBuilder {
 		return query.
-			From("users").
+			From(models.TableUser).
 			Where(fluentsql.Eq{"deleted_at": nil}).
 			Offset(offset).
 			Limit(limit)
 	}, &users, &total)
 
-	// Return empty object and error.
+	// Return an empty object and error.
 	if err != nil {
 		return users, total, err
 	}

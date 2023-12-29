@@ -7,6 +7,9 @@ import (
 	"github.com/google/uuid"
 )
 
+// TableRole Table name
+const TableRole = "roles"
+
 // Role struct to describe a role object.
 type Role struct {
 	ID        uuid.UUID    `db:"id" json:"id" validate:"required,uuid"`
