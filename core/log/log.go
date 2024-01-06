@@ -82,19 +82,19 @@ const (
 	LevelPanic
 )
 
-var strs = []string{
-	"[Trace] ",
-	"[Debug] ",
-	"[Info] ",
-	"[Warn] ",
-	"[Error] ",
-	"[Fatal] ",
-	"[Panic] ",
+var levels = []string{
+	"[TRACE] ",
+	"[DEBUG] ",
+	"[INFO] ",
+	"[WARN] ",
+	"[ERROR] ",
+	"[FATAL] ",
+	"[PANIC] ",
 }
 
 func (lv Level) toString() string {
 	if lv >= LevelTrace && lv <= LevelPanic {
-		return strs[lv]
+		return levels[lv]
 	}
 	return fmt.Sprintf("[?%d] ", lv)
 }
