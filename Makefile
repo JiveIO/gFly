@@ -17,6 +17,9 @@ critic:
 security:
 	gosec -exclude-dir=core ./...
 
+vulncheck:
+	govulncheck ./...
+
 lint:
 	golangci-lint run ./...
 
@@ -27,7 +30,7 @@ test:
 test.cover:
 	go tool cover -html=cover.out
 
-build: critic security lint test
+build: critic security vulncheck lint test
 	CGO_ENABLED=0 go build -ldflags="-w -s" -o $(BUILD_DIR)/$(APP_NAME) main.go
 	CGO_ENABLED=0 go build -ldflags="-w -s" -o $(BUILD_DIR)/$(CLI_NAME) app/console/cli.go
 
@@ -66,7 +69,7 @@ docker.image:
 	docker-compose -f docker/docker-compose.yml build --no-cache --build-arg hostUID=1000 --build-arg hostGID=1000 web
 
 docker.start: docker.run docker.logs
-docker.checking: docker.critic docker.security docker.lint
+docker.checking: docker.critic docker.vulncheck docker.security docker.lint
 
 docker.migrate.up:
 	docker exec -it --user gfly gfly-web migrate -path $(MIGRATION_FOLDER) -database "$(DATABASE_URL)" up
@@ -76,6 +79,9 @@ docker.migrate.down:
 
 docker.critic:
 	docker exec -it --user gfly gfly-web gocritic check -enableAll -disable=unnamedResult,unlabelStmt,hugeParam,singleCaseSwitch ./...
+
+docker.vulncheck:
+	docker exec -it --user gfly gfly-web govulncheck ./...
 
 docker.security:
 	docker exec -it --user gfly gfly-web gosec ./...
@@ -111,6 +117,6 @@ docker.delete:
 
 docker.destroy: docker.stop docker.delete
 
-docker.build: docker.checking docker.test docker.shell
+docker.build: docker.checking docker.vulncheck docker.test docker.shell
 
 docker.release: docker.checking docker.test docker.shell

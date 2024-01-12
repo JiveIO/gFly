@@ -39,6 +39,7 @@ RUN addgroup -g $hostGID gfly &&\
 
 # Install Go tools
 RUN go install -v github.com/go-critic/go-critic/cmd/gocritic@latest
+RUN go install golang.org/x/vuln/cmd/govulncheck@latest
 RUN go install github.com/swaggo/swag/cmd/swag@latest
 RUN go install github.com/cosmtrek/air@latest
 RUN curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.18.2
