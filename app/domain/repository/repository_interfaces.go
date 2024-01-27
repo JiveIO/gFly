@@ -18,7 +18,7 @@ type (
 		CreateUser(u *models.User) error
 		UpdateUser(u *models.User) error
 		DeleteUser(u *models.User) error
-		SelectUser(page, limit uint64) ([]*models.User, int, error)
+		SelectUser(page, limit int) ([]*models.User, int, error)
 	}
 
 	// IRoleRepository an interface for any repository implementation.

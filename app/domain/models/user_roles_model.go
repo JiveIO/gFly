@@ -1,6 +1,7 @@
 package models
 
 import (
+	mb "github.com/jiveio/fluentmodel"
 	"time"
 
 	"github.com/google/uuid"
@@ -11,8 +12,12 @@ const TableUserRole = "user_roles"
 
 // UserRole struct to describe a user role object.
 type UserRole struct {
-	ID        uuid.UUID `db:"id" json:"id" validate:"required,uuid"`
-	RoleID    uuid.UUID `db:"role_id" json:"role_id" validate:"required,uuid"`
-	UserID    uuid.UUID `db:"user_id" json:"user_id" validate:"required,uuid"`
-	CreatedAt time.Time `db:"created_at" json:"created_at"`
+	// Table meta data
+	MetaData mb.MetaData `db:"-" model:"table:user_roles"`
+
+	// Table fields
+	ID        uuid.UUID `db:"id" model:"name:id; type:uuid,primary" json:"id"`
+	RoleID    uuid.UUID `db:"role_id" model:"name:role_id; type:uuid"`
+	UserID    uuid.UUID `db:"user_id" model:"name:user_id; type:uuid"`
+	CreatedAt time.Time `db:"created_at" model:"name:created_at"`
 }

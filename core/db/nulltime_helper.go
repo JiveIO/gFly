@@ -7,7 +7,6 @@ import (
 )
 
 // ScanNullTime function will scan NullTime value.
-// Reference https://stackoverflow.com/questions/24564619/nullable-time-time
 func ScanNullTime(nullTime sql.NullTime) driver.Value {
 	if !nullTime.Valid {
 		return nil

@@ -3,11 +3,11 @@
 APP_NAME = app
 CLI_NAME = artisan
 BUILD_DIR = $(PWD)/build
-DOCKER_PATH= /home/gfly/app
-#MIGRATION_FOLDER = $(PWD)/database/migrations/postgresql
-#DATABASE_URL = postgres://user:secret@localhost:5432/gfly?sslmode=disable
-MIGRATION_FOLDER = $(DOCKER_PATH)/database/migrations/mysql
-DATABASE_URL = mysql://user:secret@tcp(db:3306)/gfly
+DOCKER_PATH = /home/gfly/app
+MIGRATION_FOLDER = $(PWD)/database/migrations/postgresql
+DATABASE_URL = postgres://user:secret@db:5432/gfly?sslmode=disable
+#MIGRATION_FOLDER = $(DOCKER_PATH)/database/migrations/mysql
+#DATABASE_URL = mysql://user:secret@tcp(db:3306)/gfly
 
 all: critic security lint test swag build
 
