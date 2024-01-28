@@ -1,10 +1,10 @@
 package notification
 
 import (
-	"app/core/db"
 	"app/core/log"
 	"encoding/json"
 	"github.com/google/uuid"
+	mb "github.com/jiveio/fluentmodel"
 	"time"
 )
 
@@ -27,15 +27,17 @@ func (h *DBNotificationHandler) Notify() {
 		log.Errorf("Cause error %v", err)
 	}
 
+	db := mb.Instance()
+
 	// Define query string.
 	query := `INSERT INTO notifications(id, type, notifiable_group, notifiable_id, data, created_at, updated_at) 
 				VALUES ($1, $2, $3, $4, $5, $6, $7)`
 
 	// Send query to database.
-	_, err = db.Instance().Exec(
+	err = db.Raw(
 		query,
 		uuid.New(), data.Type, data.NotifiableGroup, data.NotifiableId, marshal, time.Now(), time.Now(),
-	)
+	).Create(&Notification{})
 
 	if err != nil {
 		log.Errorf("Could not create an database notification. Cause error %v", err)

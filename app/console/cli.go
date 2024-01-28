@@ -5,17 +5,11 @@ import (
 	_ "app/app/console/queues"    // Autoload tasks into queue.
 	_ "app/app/console/schedules" // Autoload jobs into schedule.
 	"app/core/console"
-	"app/core/db"
-	"app/core/log"
 	_ "github.com/joho/godotenv/autoload" // load .env file automatically
 	"os"
 )
 
 func main() {
-	if err := db.Connect(); err != nil {
-		log.Panicf("DB connection error %v", err)
-	}
-
 	args := os.Args[1:] // Skip application name
 
 	switch {
