@@ -16,7 +16,7 @@ type UserRole struct {
 	MetaData mb.MetaData `db:"-" model:"table:user_roles"`
 
 	// Table fields
-	ID        uuid.UUID `db:"id" model:"name:id; type:uuid,primary" json:"id"`
+	ID        uuid.UUID `db:"id" model:"name:id; type:uuid,primary"`
 	RoleID    uuid.UUID `db:"role_id" model:"name:role_id; type:uuid"`
 	UserID    uuid.UUID `db:"user_id" model:"name:user_id; type:uuid"`
 	CreatedAt time.Time `db:"created_at" model:"name:created_at"`

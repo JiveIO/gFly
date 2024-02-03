@@ -4,29 +4,36 @@ Website [https://gfly.dev](https://gfly.dev)
 
 **Laravel inspired web framework written in Go**
 
-Built on top of FastHttp, the fastest HTTP engine for Go. Quick development with zero memory allocation and high performance. Very simple and easy to use.
+Built on top of [FastHttp - the fastest HTTP engine](https://github.com/valyala/fasthttp) and [FluentSQL - flexible and powerful SQL builder](https://github.com/jiveio/fluentsql) for Go. Quick development with zero memory allocation and high performance. Very simple and easy to use.
 
 # Tour of gFly
 
-Assume you finish step `Installation` by using `Docker Setup` or `Local Setup`
+Assume you finish step [Installation](https://doc.gfly.dev/docs/01-greeting-start/01-01-01.installation/) by using [Docker Setup](https://doc.gfly.dev/docs/01-greeting-start/01-01-01.installation/#i-docker-setup) or [Local Setup](https://doc.gfly.dev/docs/01-greeting-start/01-01-01.installation/#ii-local-setup)
 
 Let open the source with any your favorite IDEs: [VSCode](https://code.visualstudio.com/), [GoLand](https://www.jetbrains.com/go/), [NeoVim](https://neovim.io/)...
 
 We will experiment with the example of creating a page `HelloPage` and an API `HelloApi` controllers.
 
-First of all. Need to start your application by below command:
+First of all. Need to start your application by below commands:
 
+### Start app for Local Setup
 ```bash
 # Local setup
 make air
 ```
 
+### Start app for Docker Setup
 ```bash
 # Docker setup
 make docker.start
 ```
 
-Check browser `http://localhost:7789/`
+### Check app
+
+Open browser URL [http://localhost:7789/](http://localhost:7789/)
+
+Or [http://web.gfly.orb.local/](http://web.gfly.orb.local) if you run Docker with [OrbStack](https://orbstack.dev)
+
 
 # Create a HelloPage
 
@@ -46,7 +53,7 @@ import (
 // ===============================================================================
 
 // NewHelloPage As a constructor to create new Page.
-func NewHelloPage() *HomePage {
+func NewHelloPage() *HelloPage {
     return &HelloPage{}
 }
 
@@ -81,7 +88,7 @@ func WebRoutes(f gfly.IFly) {
 
 ### Checking
 
-Browse `http://localhost:7789/hello`
+Browse [http://localhost:7789/hello](http://localhost:7789/hello)
 
 # Create a HelloAPI
 
@@ -156,7 +163,7 @@ func ApiRoutes(f gfly.IFly) {
 
 ### Checking
 
-Browse `http://localhost:7789/api/v1/hello`
+Browse [http://localhost:7789/api/v1/hello](http://localhost:7789/api/v1/hello)
 
 Or terminal
 ```bash

@@ -15,8 +15,8 @@ func ApiRoutes(f gfly.IFly) {
 		os.Getenv("API_VERSION"),
 	)
 
+	// API Routers
 	f.Group(prefixAPI, func(apiRouter *gfly.Group) {
-		// API Routers
 		// curl -v -X GET http://localhost:7789/api/v1/info | jq
 		apiRouter.GET("/info", api.NewDefaultApi())
 	})

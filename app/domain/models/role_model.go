@@ -17,9 +17,9 @@ type Role struct {
 	MetaData mb.MetaData `db:"-" model:"table:roles"`
 
 	// Table fields
-	ID        uuid.UUID    `db:"id" model:"name:id; type:uuid,primary" json:"id"`
-	Name      string       `db:"name" model:"name:name" json:"name"`
-	Slug      string       `db:"slug" model:"name:slug" json:"slug"`
-	CreatedAt time.Time    `db:"created_at" model:"name:created_at" json:"created_at"`
-	UpdatedAt sql.NullTime `db:"updated_at" model:"name:updated_at" json:"updated_at"`
+	ID        uuid.UUID    `db:"id" model:"name:id; type:uuid,primary"`
+	Name      string       `db:"name" model:"name:name"`
+	Slug      string       `db:"slug" model:"name:slug"`
+	CreatedAt time.Time    `db:"created_at" model:"name:created_at"`
+	UpdatedAt sql.NullTime `db:"updated_at" model:"name:updated_at"`
 }
