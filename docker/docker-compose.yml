@@ -3,7 +3,7 @@ version: '3.2'
 services:
   web:
     build:
-      context: ""
+      context: .
       dockerfile: Dockerfile
       args:
         hostUID: 1000
