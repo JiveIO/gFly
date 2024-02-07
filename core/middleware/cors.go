@@ -10,12 +10,14 @@ import (
 )
 
 const (
-	allowedHeaders = "Authorization, Content-Type, x-requested-with, origin, true-client-ip, X-Correlation-ID"
-	allowedMethods = "PUT, POST, GET, DELETE, OPTIONS, PATCH"
+	AllowedOrigin  = "*"
+	AllowedHeaders = "Authorization, Content-Type, x-requested-with, origin, true-client-ip, X-Correlation-ID"
+	AllowedMethods = "PUT, POST, GET, DELETE, OPTIONS, PATCH"
 )
 
 // CORS an HTTP middleware that sets headers based on the provided envHeaders configuration
-// Add global middlewares
+//
+// Example: Add global middlewares in main file
 //
 //	app.Use(middleware.CORS(map[string]string{
 //		gfly.HeaderAccessControlAllowOrigin: "*",
@@ -46,18 +48,18 @@ func getValidCORSHeaders(envHeaders map[string]string) map[string]string {
 		// If config is not set - for the three headers, set default value.
 		switch header {
 		case gfly.HeaderAccessControlAllowOrigin:
-			validCORSHeadersAndValues[header] = "*"
+			validCORSHeadersAndValues[header] = AllowedOrigin
 		case gfly.HeaderAccessControlAllowHeaders:
-			validCORSHeadersAndValues[header] = allowedHeaders
+			validCORSHeadersAndValues[header] = AllowedHeaders
 		case gfly.HeaderAccessControlAllowMethods:
-			validCORSHeadersAndValues[header] = allowedMethods
+			validCORSHeadersAndValues[header] = AllowedMethods
 		}
 	}
 
 	val := validCORSHeadersAndValues[gfly.HeaderAccessControlAllowHeaders]
 
-	if val != allowedHeaders {
-		validCORSHeadersAndValues[gfly.HeaderAccessControlAllowHeaders] = allowedHeaders + ", " + val
+	if val != AllowedHeaders {
+		validCORSHeadersAndValues[gfly.HeaderAccessControlAllowHeaders] = AllowedHeaders + ", " + val
 	}
 
 	return validCORSHeadersAndValues

@@ -2,6 +2,7 @@ package gfly
 
 import (
 	"app/core/log"
+	"app/core/middleware"
 	"app/core/utils"
 	"fmt"
 	"strings"
@@ -106,6 +107,17 @@ func NewRouter() *Router {
 		RedirectFixedPath:      true,
 		HandleMethodNotAllowed: true,
 		HandleOPTIONS:          true,
+		PanicHandler: func(ctx *Ctx, data interface{}) {
+			log.Errorf("Router Panic Handling %v", data)
+		},
+		GlobalOPTIONS: func(ctx *Ctx) error {
+			// Set CORs headers
+			ctx.root.Response.Header.Set(HeaderAccessControlAllowOrigin, "*")
+			ctx.root.Response.Header.Set(HeaderAccessControlAllowMethods, middleware.AllowedMethods)
+			ctx.root.Response.Header.Set(HeaderAccessControlAllowHeaders, middleware.AllowedHeaders)
+
+			return nil
+		},
 	}
 }
 

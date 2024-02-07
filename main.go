@@ -33,7 +33,7 @@ func main() {
 
 	// Add global middlewares
 	app.Use(middleware.CORS(map[string]string{
-		gfly.HeaderAccessControlAllowOrigin: "*",
+		gfly.HeaderAccessControlAllowOrigin: middleware.AllowedOrigin,
 	}))
 
 	routes.AppRoutes(app)
