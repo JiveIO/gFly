@@ -90,6 +90,8 @@ type IHeader interface {
 	GetCookie(key string) string
 	// GetReqHeaders returns the HTTP request headers.
 	GetReqHeaders() map[string][]string
+	// Path returns path URI
+	Path() string
 }
 
 // Status sets the response's HTTP code.
@@ -141,6 +143,11 @@ func (c *Ctx) GetReqHeaders() map[string][]string {
 	})
 
 	return headers
+}
+
+// Path returns path URI
+func (c *Ctx) Path() string {
+	return string(c.root.URI().Path())
 }
 
 // ===========================================================================================================
