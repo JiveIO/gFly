@@ -42,7 +42,7 @@ func getRedisClientOpt() asynq.RedisClientOpt {
 	)
 
 	// Define Redis database number.
-	dbNumber := utils.Getenv("REDIS_DB_NUMBER", 0)
+	dbNumber := utils.Getenv("REDIS_QUEUE_NUMBER", 0)
 
 	return asynq.RedisClientOpt{
 		Addr:     redisConnURL,
