@@ -32,5 +32,5 @@ func (h *MailNotificationHandler) Notify() {
 
 	mail.Send(envelop)
 
-	log.Infof("Send via Mail data %v", data)
+	log.Debugf("Send via Mail data %v", data)
 }

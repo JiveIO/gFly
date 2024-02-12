@@ -16,8 +16,13 @@ func ScanNullTime(nullTime sql.NullTime) driver.Value {
 
 // NowNullTime function will create a NullTime object.
 func NowNullTime() sql.NullTime {
+	return NullTime(time.Now())
+}
+
+// NullTime function will create a NullTime object.
+func NullTime(val time.Time) sql.NullTime {
 	return sql.NullTime{
-		Time:  time.Now(),
+		Time:  val,
 		Valid: true,
 	}
 }

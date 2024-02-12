@@ -14,9 +14,9 @@ func ScanNullByte(nullBool sql.NullByte) driver.Value {
 }
 
 // NullByte function will create a NullBool object.
-func NullByte() sql.NullByte {
+func NullByte(val byte) sql.NullByte {
 	return sql.NullByte{
-		Byte:  0,
+		Byte:  val,
 		Valid: true,
 	}
 }

@@ -14,9 +14,9 @@ func ScanNullBool(nullBool sql.NullBool) driver.Value {
 }
 
 // NullBool function will create a NullBool object.
-func NullBool() sql.NullBool {
+func NullBool(val bool) sql.NullBool {
 	return sql.NullBool{
-		Bool:  true,
+		Bool:  val,
 		Valid: true,
 	}
 }

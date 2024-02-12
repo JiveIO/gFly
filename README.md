@@ -1,4 +1,4 @@
-# gFly v1.3.1
+# gFly v1.4.2
 
 Website [https://gfly.dev](https://gfly.dev)
 

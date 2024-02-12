@@ -15,9 +15,12 @@ func fileExt(fileName string) string {
 }
 
 // startupMessage Startup message.
-func startupMessage(url string) {
+func startupMessage(url, name, env string) {
 	Box := box.New(box.Config{Px: 5, Py: 1, Type: "Round", Color: "Cyan", ContentAlign: "Center", TitleColor: "Magenta", ContentColor: "Green"})
-	Box.Print(fmt.Sprintf("_=| gFly v%s |=_", Version), fmt.Sprintf("Laravel inspired web framework \n%s", url))
+	Box.Print(
+		fmt.Sprintf("_=| gFly %s |=_", Version),
+		fmt.Sprintf("Laravel inspired web framework \nServer: %s\nApp Name: %s\nEnvironment: %s", url, name, env),
+	)
 }
 
 // cleanPath removes the '.' if it is the last character of the route

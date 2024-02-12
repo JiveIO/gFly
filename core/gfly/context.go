@@ -5,9 +5,9 @@ import (
 	"app/core/log"
 	"app/core/utils"
 	"app/core/validation"
+	"app/core/view"
 	"encoding/json"
 	"fmt"
-	"github.com/flosch/pongo2/v6"
 	"github.com/google/uuid"
 	"github.com/valyala/fasthttp"
 	"io"
@@ -162,7 +162,7 @@ type IResponse interface {
 	// NoContent Response no content.
 	NoContent() error
 	// View Load template page.
-	View(template string, data ViewData) error
+	View(template string, data view.Data) error
 	// JSON sets the HTTP response body for JSON type.
 	JSON(data JsonData) error
 	// HTML sets the HTTP response body for HTML type.
@@ -200,21 +200,11 @@ func (c *Ctx) NoContent() error {
 	return nil
 }
 
-type ViewData map[string]any
-
 // View Render from template file.
-func (c *Ctx) View(template string, data ViewData) error {
-	var tplExample = pongo2.Must(pongo2.FromFile(fmt.Sprintf("%s/%s.%s", ViewPath, template, ViewExt)))
-	pongoContext := pongo2.Context(data)
-
-	err := tplExample.ExecuteWriter(pongoContext, c.root.Response.BodyWriter())
-	if err != nil {
-		return err
-	}
-
+func (c *Ctx) View(template string, data view.Data) error {
 	c.ContentType(MIMETextHTMLCharsetUTF8)
 
-	return nil
+	return view.LoadViewWriter(template, data, c.root.Response.BodyWriter())
 }
 
 type JsonData interface{}

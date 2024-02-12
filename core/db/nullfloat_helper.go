@@ -14,9 +14,9 @@ func ScanNullFloat64(nullInt sql.NullFloat64) driver.Value {
 }
 
 // NullFloat64 function will create a NullFloat64 object.
-func NullFloat64() sql.NullFloat64 {
+func NullFloat64(val float64) sql.NullFloat64 {
 	return sql.NullFloat64{
-		Float64: 0,
+		Float64: val,
 		Valid:   true,
 	}
 }

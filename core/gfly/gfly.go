@@ -14,9 +14,11 @@ import (
 // ===========================================================================================================
 
 var (
-	ViewPath     = os.Getenv("VIEW_PATH")
-	ViewExt      = os.Getenv("VIEW_EXT")
+	AppName      = os.Getenv("APP_NAME")
+	AppURL       = os.Getenv("APP_URL")
+	AppEnv       = os.Getenv("APP_ENV")
 	TemporaryDir = os.Getenv("TEMP_DIR")
+	PrefixAPI    = fmt.Sprintf("/%s/%s", os.Getenv("API_PREFIX"), os.Getenv("API_VERSION"))
 )
 
 // IFly Interface to declare all methods for gFly struct.
@@ -86,7 +88,7 @@ func (fly *gFly) Start() {
 
 	// Print startup message
 	if !fly.config.DisableStartupMessage {
-		startupMessage(url)
+		startupMessage(url, AppName, AppEnv)
 	}
 
 	certFile := utils.Getenv("SERVER_TLS_CERT", "")
