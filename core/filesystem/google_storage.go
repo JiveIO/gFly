@@ -58,6 +58,10 @@ func (s *GoogleStorage) LastModified(path string) time.Time {
 	return time.Now()
 }
 
+func (s *GoogleStorage) Url(path string) string {
+	return path
+}
+
 func (s *GoogleStorage) MakeDir(dir string) bool {
 	return true
 }

@@ -118,8 +118,8 @@ func (fly *gFly) serveFastHTTP(ctx *fasthttp.RequestCtx) {
 
 // errorHandler Server error handler.
 func (fly *gFly) errorHandler(ctx *fasthttp.RequestCtx, err error) {
-	log.Debug(ctx.String())
-	log.Error(err)
+	log.Debugf("Error %s", ctx.String())
+	log.Errorf("Error happens %v", err)
 }
 
 // New Create new gFly app.

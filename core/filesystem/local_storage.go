@@ -236,6 +236,13 @@ func (s *LocalStorage) LastModified(path string) time.Time {
 	return fileInfo.ModTime()
 }
 
+// Url Get public URL of an object via path
+func (s *LocalStorage) Url(path string) string {
+	appURL := os.Getenv("APP_URL")
+
+	return strings.TrimSuffix(appURL, "/") + "/" + strings.TrimPrefix(filepath.ToSlash(path), "/")
+}
+
 func (s *LocalStorage) MakeDir(dir string) bool {
 	err := os.MkdirAll(s.Path(dir), os.ModePerm)
 	if err != nil {

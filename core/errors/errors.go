@@ -19,4 +19,5 @@ const (
 	MissingHeader     = Error("Missing header")
 	ServiceDown       = Error("Service unavailable")
 	InvalidParameter  = Error("Invalid parameter") // Common error case about invalid parameter
+	ItemNotFound      = Error("Item not found")    // Common error case item not found
 )

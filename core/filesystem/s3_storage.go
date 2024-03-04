@@ -15,6 +15,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -118,7 +119,7 @@ func (s *S3Storage) Put(path, contents string, options ...interface{}) bool {
 
 func (s *S3Storage) PutFile(path string, fileSource *os.File, options ...interface{}) bool {
 	_, err := s.S3Client.PutObject(context.TODO(), &s3.PutObjectInput{
-		Bucket: aws.String(os.Getenv("AWS_BUCKET")),
+		Bucket: aws.String(os.Getenv("AWS_S3_BUCKET")),
 		Key:    aws.String(path),
 		Body:   fileSource,
 	})
@@ -140,7 +141,7 @@ func (s *S3Storage) PutFilepath(path, filePath string, options ...interface{}) b
 	}
 
 	_, err = s.S3Client.PutObject(context.TODO(), &s3.PutObjectInput{
-		Bucket: aws.String(os.Getenv("AWS_BUCKET")),
+		Bucket: aws.String(os.Getenv("AWS_S3_BUCKET")),
 		Key:    aws.String(path),
 		Body:   fileSource,
 	})
@@ -155,7 +156,7 @@ func (s *S3Storage) PutFilepath(path, filePath string, options ...interface{}) b
 
 func (s *S3Storage) Delete(path string) bool {
 	_, err := s.S3Client.DeleteObject(context.TODO(), &s3.DeleteObjectInput{
-		Bucket: aws.String(os.Getenv("AWS_BUCKET")),
+		Bucket: aws.String(os.Getenv("AWS_S3_BUCKET")),
 		Key:    aws.String(path),
 	})
 	if err != nil {
@@ -169,8 +170,8 @@ func (s *S3Storage) Delete(path string) bool {
 
 func (s *S3Storage) Copy(from, to string) bool {
 	_, err := s.S3Client.CopyObject(context.TODO(), &s3.CopyObjectInput{
-		Bucket:     aws.String(os.Getenv("AWS_BUCKET")),
-		CopySource: aws.String(fmt.Sprintf("%s/%s", os.Getenv("AWS_BUCKET"), from)),
+		Bucket:     aws.String(os.Getenv("AWS_S3_BUCKET")),
+		CopySource: aws.String(fmt.Sprintf("%s/%s", os.Getenv("AWS_S3_BUCKET"), from)),
 		Key:        aws.String(to),
 	})
 	if err != nil {
@@ -217,7 +218,7 @@ func (s *S3Storage) Get(path string) ([]byte, error) {
 
 func (s *S3Storage) Size(path string) int64 {
 	result, err := s.S3Client.GetObjectAttributes(context.TODO(), &s3.GetObjectAttributesInput{
-		Bucket: aws.String(os.Getenv("AWS_BUCKET")),
+		Bucket: aws.String(os.Getenv("AWS_S3_BUCKET")),
 		Key:    aws.String(path),
 		ObjectAttributes: []s3Types.ObjectAttributes{
 			s3Types.ObjectAttributesObjectSize,
@@ -232,7 +233,7 @@ func (s *S3Storage) Size(path string) int64 {
 
 func (s *S3Storage) LastModified(path string) time.Time {
 	result, err := s.S3Client.GetObjectAttributes(context.TODO(), &s3.GetObjectAttributesInput{
-		Bucket: aws.String(os.Getenv("AWS_BUCKET")),
+		Bucket: aws.String(os.Getenv("AWS_S3_BUCKET")),
 		Key:    aws.String(path),
 		ObjectAttributes: []s3Types.ObjectAttributes{
 			s3Types.ObjectAttributesObjectParts,
@@ -248,6 +249,18 @@ func (s *S3Storage) LastModified(path string) time.Time {
 	return *result.LastModified
 }
 
+// Url Get public URL of an object via path
+//
+//	Pattern URL (Use it) `https://<bucket-name>.s3.<region>.amazonaws.com/<key>`
+//	Pattern URL `https://<region>.amazonaws.com/<bucket-name>/<key>`
+func (s *S3Storage) Url(path string) string {
+	return fmt.Sprintf("https://%s.s3.%s.amazonaws.com/%s",
+		os.Getenv("AWS_S3_BUCKET"),
+		os.Getenv("AWS_DEFAULT_REGION"),
+		strings.TrimPrefix(filepath.ToSlash(path), "/"),
+	)
+}
+
 func (s *S3Storage) MakeDir(dir string) bool {
 	return s.Put(fmt.Sprintf("%s/.info", dir), "Info")
 }
@@ -256,7 +269,7 @@ func (s *S3Storage) DeleteDir(dir string) bool {
 	// Get all objects in dir
 	// Note: Can not delete a dir have children object.
 	result, err := s.S3Client.ListObjectsV2(context.TODO(), &s3.ListObjectsV2Input{
-		Bucket: aws.String(os.Getenv("AWS_BUCKET")),
+		Bucket: aws.String(os.Getenv("AWS_S3_BUCKET")),
 		Prefix: aws.String(dir),
 	})
 	var contents []s3Types.Object
@@ -278,7 +291,7 @@ func (s *S3Storage) DeleteDir(dir string) bool {
 
 	// Delete objects
 	_, err = s.S3Client.DeleteObjects(context.TODO(), &s3.DeleteObjectsInput{
-		Bucket: aws.String(os.Getenv("AWS_BUCKET")),
+		Bucket: aws.String(os.Getenv("AWS_S3_BUCKET")),
 		Delete: &s3Types.Delete{Objects: objectIds},
 	})
 
@@ -299,7 +312,7 @@ func (s *S3Storage) Append(path, data string) bool {
 
 func (s *S3Storage) getObject(path string) (*s3.GetObjectOutput, error) {
 	result, err := s.S3Client.GetObject(context.TODO(), &s3.GetObjectInput{
-		Bucket: aws.String(os.Getenv("AWS_BUCKET")),
+		Bucket: aws.String(os.Getenv("AWS_S3_BUCKET")),
 		Key:    aws.String(path),
 	})
 	if err != nil {

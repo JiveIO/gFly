@@ -67,6 +67,8 @@ type IStorage interface {
 	Size(path string) int64
 	// LastModified Obtains last modified of file
 	LastModified(path string) time.Time
+	// Url Absolute URL (Public URL)
+	Url(path string) string
 
 	//-- Directory
 
