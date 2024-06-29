@@ -1,5 +1,9 @@
 # gFly v1.4.2
 
+```
+NOTE: Please wait release v1.5.0
+```
+
 Website [https://gfly.dev](https://gfly.dev)
 
 **Laravel inspired web framework written in Go**
