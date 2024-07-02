@@ -13,6 +13,7 @@ import (
 	"io"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -204,6 +205,9 @@ func (c *Ctx) NoContent() error {
 func (c *Ctx) View(template string, data view.Data) error {
 	c.ContentType(MIMETextHTMLCharsetUTF8)
 
+	data["appName"] = AppName
+	data["appURL"] = AppURL
+
 	return view.LoadViewWriter(template, data, c.root.Response.BodyWriter())
 }
 
@@ -258,7 +262,13 @@ func (c *Ctx) Stream(stream io.Reader, size ...int) error {
 
 // Redirect Send redirect.
 func (c *Ctx) Redirect(path string) error {
+	// Check the `path` is relative URI. Build full internal URL
+	if !strings.HasPrefix(path, SchemaHTTP) {
+		path = AppURL + path
+	}
+
 	c.root.Redirect(path, StatusMovedPermanently)
+	log.Tracef("redirect to %s", path)
 
 	return errors.NA
 }
@@ -320,7 +330,7 @@ func (c *Ctx) File(file string, compress ...bool) error {
 	// copy of https://github.com/valyala/fasthttp/blob/7cc6f4c513f9e0d3686142e0a1a5aa2f76b3194a/fs.go#L103-L121 with small adjustments
 	if file == "" || !filepath.IsAbs(file) {
 		// extend relative path to absolute path
-		hasTrailingSlash := len(file) > 0 && (file[len(file)-1] == '/' || file[len(file)-1] == '\\')
+		hasTrailingSlash := file != "" && (file[len(file)-1] == '/' || file[len(file)-1] == '\\')
 
 		var err error
 		file = filepath.FromSlash(file)

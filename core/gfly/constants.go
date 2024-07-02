@@ -6,7 +6,7 @@ package gfly
 
 const (
 	// Version of current gFly
-	Version = "v1.4.2"
+	Version = "v1.5.0"
 )
 
 // ===========================================================================================================
@@ -299,7 +299,7 @@ const (
 	HeaderSourceMap               = "SourceMap"
 	HeaderUpgrade                 = "Upgrade"
 	HeaderXDNSPrefetchControl     = "X-DNS-Prefetch-Control"
-	HeaderXPingback               = "X-Pingback"
+	HeaderXPingBack               = "X-Pingback"
 	HeaderXRequestID              = "X-Request-ID"
 	HeaderXRequestedWith          = "X-Requested-With"
 	HeaderXRobotsTag              = "X-Robots-Tag"

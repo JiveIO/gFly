@@ -119,7 +119,7 @@ func NewEmailFromReader(r io.Reader) (*Email, error) {
 		case "Subject":
 			e.Subject = v[0]
 			subj, err := (&mime.WordDecoder{}).DecodeHeader(e.Subject)
-			if err == nil && len(subj) > 0 {
+			if err == nil && subj != "" {
 				e.Subject = subj
 			}
 			delete(hdrs, h)
@@ -138,7 +138,7 @@ func NewEmailFromReader(r io.Reader) (*Email, error) {
 		case "From":
 			e.From = v[0]
 			fr, err := (&mime.WordDecoder{}).DecodeHeader(e.From)
-			if err == nil && len(fr) > 0 {
+			if err == nil && fr != "" {
 				e.From = fr
 			}
 			delete(hdrs, h)
@@ -710,7 +710,7 @@ type Attachment struct {
 
 func (at *Attachment) setDefaultHeaders() {
 	contentType := "application/octet-stream"
-	if len(at.ContentType) > 0 {
+	if at.ContentType != "" {
 		contentType = at.ContentType
 	}
 	at.Header.Set("Content-Type", contentType)

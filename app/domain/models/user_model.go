@@ -23,7 +23,7 @@ type User struct {
 	Fullname     string         `db:"fullname" model:"name:fullname"`
 	Phone        string         `db:"phone" model:"name:phone"`
 	Token        sql.NullString `db:"token" model:"name:token"`
-	UserStatus   int            `db:"user_status" model:"name:user_status"`
+	Status       int            `db:"status" model:"name:status"`
 	CreatedAt    time.Time      `db:"created_at" model:"name:created_at"`
 	UpdatedAt    time.Time      `db:"updated_at" model:"name:updated_at"`
 	VerifiedAt   sql.NullTime   `db:"verified_at" model:"name:verified_at"`

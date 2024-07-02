@@ -1,8 +1,8 @@
 package notification
 
 import (
+	mb "app/core/fluentmodel"
 	"database/sql"
-	mb "github.com/jiveio/fluentmodel"
 	"time"
 
 	"github.com/google/uuid"

@@ -1,6 +1,7 @@
 package redis
 
 import (
+	"app/core/log"
 	"context"
 	"time"
 
@@ -12,16 +13,18 @@ func (p *Provider) getRedisSessionKey(sessionID []byte) string {
 	key.SetString(p.keyPrefix)
 	_, err := key.WriteString(":")
 	if err != nil {
-		return ""
+		log.Fatalf("session key generation failed: %v", err)
 	}
 	_, err = key.Write(sessionID)
 	if err != nil {
-		return ""
+		log.Fatalf("session key generation failed: %v", err)
 	}
 
 	keyStr := key.String()
 
 	bytebufferpool.Put(key)
+
+	log.Tracef("session key : %v", keyStr)
 
 	return keyStr
 }

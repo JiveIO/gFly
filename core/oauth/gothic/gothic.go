@@ -89,7 +89,7 @@ func BeginAuthHandler(ctx *fasthttp.RequestCtx) {
 // callback.
 var SetState = func(ctx *fasthttp.RequestCtx) string {
 	state := GetState(ctx)
-	if len(state) > 0 {
+	if state != "" {
 		return state
 	}
 

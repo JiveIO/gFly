@@ -26,7 +26,7 @@ func CORS(envHeaders map[string]string) gfly.MiddlewareHandler {
 	return func(c *gfly.Ctx) error {
 		corsHeadersConfig := getValidCORSHeaders(envHeaders)
 		for k, v := range corsHeadersConfig {
-			c.Root().Response.Header.Set(k, v)
+			c.SetHeader(k, v)
 		}
 
 		return nil

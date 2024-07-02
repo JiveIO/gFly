@@ -95,6 +95,10 @@ func (s *Session) startGC() {
 	}
 }
 
+/*func (s *Session) stopGC() {
+	s.stopGCChan <- struct{}{}
+}*/
+
 func (s *Session) setHTTPValues(ctx *fasthttp.RequestCtx, sessionID []byte, expiration time.Duration) {
 	secure := s.config.Secure && s.config.IsSecureFunc(ctx)
 	s.cookie.set(ctx, s.config.CookieName, sessionID, s.config.Domain, expiration, secure, s.config.CookieSameSite)

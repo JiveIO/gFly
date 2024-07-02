@@ -110,7 +110,7 @@ func NewRouter() *Router {
 			log.Errorf("Router Panic Handling %v", data)
 		},
 		GlobalOPTIONS: func(ctx *Ctx) error {
-			// Set CORs headers. Refer to middleware.cors
+			// Set CORs headers
 			ctx.root.Response.Header.Set(HeaderAccessControlAllowOrigin, "*")
 			ctx.root.Response.Header.Set(HeaderAccessControlAllowMethods, "PUT, POST, GET, DELETE, OPTIONS, PATCH")
 			ctx.root.Response.Header.Set(HeaderAccessControlAllowHeaders, "Authorization, Content-Type, x-requested-with, origin, true-client-ip, X-Correlation-ID")

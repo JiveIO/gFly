@@ -52,5 +52,5 @@ func (h *SMSNotificationHandler) Notify() {
 
 	response, _ := json.Marshal(*resp)
 
-	log.Infof("Not yet implemented! Send via SMS data %v. Response %s", data, utils.UnsafeString(response))
+	log.Tracef("Not yet implemented! Send via SMS data %v. Response %s", data, utils.UnsafeString(response))
 }

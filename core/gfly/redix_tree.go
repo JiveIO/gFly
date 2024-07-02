@@ -78,7 +78,7 @@ func panicf(s string, args ...interface{}) {
 	panic(fmt.Sprintf(s, args...))
 }
 
-func min(a, b int) int {
+func minVal(a, b int) int {
 	if a <= b {
 		return a
 	}
@@ -101,9 +101,9 @@ func bufferRemoveString(buf *bytebufferpool.ByteBuffer, s string) {
 // since the existing key can't contain those chars.
 func longestCommonPrefix(a, b string) int {
 	i := 0
-	max := min(utf8.RuneCountInString(a), utf8.RuneCountInString(b))
+	maxVal := minVal(utf8.RuneCountInString(a), utf8.RuneCountInString(b))
 
-	for i < max {
+	for i < maxVal {
 		ra, sizeA := utf8.DecodeRuneInString(a)
 		rb, sizeB := utf8.DecodeRuneInString(b)
 
@@ -198,7 +198,7 @@ func findWildPath(path, fullPath string) *wildPath {
 					wp.end++
 				}
 
-				if len(path) > 0 {
+				if path != "" {
 					// Rebuild the wildpath with the prefix
 					wp2 := findWildPath(path, fullPath)
 					if wp2 != nil {
@@ -540,7 +540,7 @@ func (n *node) insert(path, fullPath string, handler IHandler) (*node, error) {
 
 		path = path[wp.end:]
 
-		if len(path) > 0 {
+		if path != "" {
 			n.children = append(n.children, child)
 
 			return child.insert(path, fullPath, handler)

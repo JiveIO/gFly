@@ -29,5 +29,5 @@ func (h *SlackNotificationHandler) Notify() {
 		log.Errorf("Error %v", err)
 	}
 
-	log.Infof("Send via Slack data %v", data)
+	log.Tracef("Send via Slack data %v", data)
 }

@@ -1,4 +1,4 @@
-.PHONY: critic security lint test build run
+.PHONY: critic security lint test build run dev
 
 APP_NAME = app
 CLI_NAME = artisan
@@ -12,7 +12,7 @@ DATABASE_URL = postgres://user:secret@db:5432/gfly?sslmode=disable
 all: critic security lint test swag build
 
 critic:
-	gocritic check -enableAll -disable=unnamedResult,unlabelStmt,hugeParam,singleCaseSwitch ./...
+	gocritic check -enableAll -disable=unnamedResult,unlabelStmt,hugeParam,singleCaseSwitch,builtinShadow,typeAssertChain ./...
 
 security:
 	gosec -exclude-dir=core ./...
@@ -45,25 +45,39 @@ migrate.up:
 migrate.down:
 	migrate -path $(MIGRATION_FOLDER) -database "$(DATABASE_URL)" down
 
-air:
-	air main.go
+dev:
+	air -build.exclude_dir=node_modules,public,resources,Dev,bin,build,dist,docker,storage,tmp,database,docs main.go
+
+clean:
+	go mod tidy
+	go clean -cache
+	go clean -testcache
 
 swag:
 	swag init
 	cp ./docs/swagger.json ./public/docs
 
 release:
-	mkdir -p bin
-	# 64 bit - Windows
-	GOOS=windows GOARCH=amd64 go build -o $(BUILD_DIR)/$(APP_NAME)-amd64.exe *.go
-	# 64-bit - Mac
-	GOOS=darwin GOARCH=amd64 go build -o $(BUILD_DIR)/$(APP_NAME)-amd64-darwin *.go
-	# 64-bit - Mac ARM
-	GOOS=darwin GOARCH=arm64 go build -o $(BUILD_DIR)/$(APP_NAME)-arm64-darwin *.go
 	# 64-bit - Linux
 	GOOS=linux GOARCH=amd64 go build -o $(BUILD_DIR)/$(APP_NAME)-amd64-linux *.go
 	# 64-bit - Linux ARM
-	GOOS=linux GOARCH=arm64 go build -o $(BUILD_DIR)/$(APP_NAME)-arm64-linux *.go
+	#GOOS=linux GOARCH=arm64 go build -o $(BUILD_DIR)/$(APP_NAME)-arm64-linux *.go
+
+	scp /Users/vinh/Working/DanceFitVN/dancefitvn/build/app-amd64-linux root@jivecode:/tmp/
+	scp -r /Users/vinh/Working/DanceFitVN/dancefitvn/resources/views root@jivecode:/root/dancefitvn/resources/
+
+release.windows:
+	mkdir -p bin
+	# 64 bit - Windows
+	GOOS=windows GOARCH=amd64 go build -o $(BUILD_DIR)/$(APP_NAME)-amd64.exe *.go
+
+release.mac:
+	mkdir -p bin
+	# 64-bit - Mac
+	#GOOS=darwin GOARCH=amd64 go build -o $(BUILD_DIR)/$(APP_NAME)-amd64-darwin *.go
+	# 64-bit - Mac ARM
+	GOOS=darwin GOARCH=arm64 go build -o $(BUILD_DIR)/$(APP_NAME)-arm64-darwin *.go
+
 
 docker.image:
 	docker-compose -f docker/docker-compose.yml build --no-cache --build-arg hostUID=1000 --build-arg hostGID=1000 web

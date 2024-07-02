@@ -3,6 +3,8 @@ package validation
 import (
 	goerrors "errors"
 	"github.com/go-playground/validator/v10"
+	"reflect"
+	"strings"
 )
 
 // ===========================================================================================================
@@ -23,6 +25,17 @@ func ValidatorInstance() *validator.Validate {
 
 	// Custom validation for uuid.UUID fields. Use `validate:"uuid"`
 	_ = instance.RegisterValidation("uuid", uuidValidator)
+
+	// Get json tag value
+	instance.RegisterTagNameFunc(func(fld reflect.StructField) string {
+		name := strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]
+
+		if name == "-" {
+			return ""
+		}
+
+		return name
+	})
 
 	return instance
 }

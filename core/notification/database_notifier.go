@@ -1,10 +1,10 @@
 package notification
 
 import (
+	mb "app/core/fluentmodel"
 	"app/core/log"
 	"encoding/json"
 	"github.com/google/uuid"
-	mb "github.com/jiveio/fluentmodel"
 	"time"
 )
 
@@ -30,7 +30,7 @@ func (h *DBNotificationHandler) Notify() {
 	db := mb.Instance()
 
 	// Define query string.
-	query := `INSERT INTO notifications(id, type, notifiable_group, notifiable_id, data, created_at, updated_at) 
+	query := `INSERT INTO notifications(id, type, notifiable_group, notifiable_id, data, created_at, updated_at)
 				VALUES ($1, $2, $3, $4, $5, $6, $7)`
 
 	// Send query to database.

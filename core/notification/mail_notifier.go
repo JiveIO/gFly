@@ -26,11 +26,11 @@ func (h *MailNotificationHandler) Notify() {
 		HTML:    data.Body,
 	}
 
-	if len(data.Cc) > 0 {
+	if data.Cc != "" {
 		envelop.Cc = []string{data.Cc}
 	}
 
 	mail.Send(envelop)
 
-	log.Debugf("Send via Mail data %v", data)
+	log.Tracef("Send via Mail data %v", data)
 }

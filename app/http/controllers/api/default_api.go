@@ -21,6 +21,13 @@ type DefaultApi struct {
 }
 
 // Handle Process main logic for API.
+// @Summary Get API info
+// @Description Get API information
+// @Tags Mics
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /info [get]
 func (h *DefaultApi) Handle(c *gfly.Ctx) error {
 	obj := map[string]any{
 		"name": os.Getenv("API_NAME"),

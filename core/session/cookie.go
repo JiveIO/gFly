@@ -10,6 +10,10 @@ func newCookie() *cookie {
 	return new(cookie)
 }
 
+/*func (c *cookie) get(ctx *fasthttp.RequestCtx, name string) []byte {
+	return ctx.Request.Header.Cookie(name)
+}*/
+
 func (c *cookie) set(ctx *fasthttp.RequestCtx, name string, value []byte, domain string, expiration time.Duration, secure bool, sameSite fasthttp.CookieSameSite) {
 	cookie := fasthttp.AcquireCookie()
 
