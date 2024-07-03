@@ -2,7 +2,7 @@
 
 **Laravel inspired web framework written in Go**
 
-Built on top of [FastHttp - the fastest HTTP engine](https://github.com/valyala/fasthttp), [FluentSQL - flexible and powerful SQL builder](https://github.com/jiveio/fluentsql) and [Fluent Model - flexible and powerful Data-Access Layer](https://github.com/jiveio/fluentmodel) for Go. Quick development with zero memory allocation and high performance. Very simple and easy to use.
+Built on top of [FastHttp - the fastest HTTP engine](https://github.com/valyala/fasthttp), [FluentSQL - flexible and powerful SQL builder](https://github.com/jiveio/fluentsql) and [FluentModel - flexible and powerful Data-Access Layer](https://github.com/jiveio/fluentmodel) for Go. Quick development with zero memory allocation and high performance. Very simple and easy to use.
 
 # Tour of gFly
 
@@ -14,16 +14,13 @@ First of all. Need to start your application by below commands:
 
 ### Pull `gFly` code structure
 ```bash
-git clone https://github.com/JiveIO/gFly.git && rm -rf gFly/.git*
+git clone https://github.com/JiveIO/gFly.git && cd gFly && rm -rf .git* && cp .env.example .env
 ```
 
 ### Start app
 ```bash
 # Local setup
-make air
-
-# Docker setup
-make docker.start
+go run main.go
 ```
 
 ### Check app

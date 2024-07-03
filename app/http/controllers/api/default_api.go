@@ -26,7 +26,7 @@ type DefaultApi struct {
 // @Tags Mics
 // @Accept json
 // @Produce json
-// @Success 200
+// @Success 200 {object} response.ServerInfo
 // @Router /info [get]
 func (h *DefaultApi) Handle(c *gfly.Ctx) error {
 	obj := map[string]any{
