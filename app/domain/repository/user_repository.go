@@ -2,9 +2,9 @@ package repository
 
 import (
 	"app/app/domain/models"
+	mb "app/core/fluentmodel" // Model builder
+	qb "app/core/fluentsql"   // Query builder
 	"github.com/google/uuid"
-	mb "github.com/jiveio/fluentmodel" // Model builder
-	qb "github.com/jiveio/fluentsql"   // Query builder
 )
 
 // UserRepository struct for queries from a User model.

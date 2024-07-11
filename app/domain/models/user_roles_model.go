@@ -1,7 +1,7 @@
 package models
 
 import (
-	mb "github.com/jiveio/fluentmodel"
+	mb "app/core/fluentmodel"
 	"time"
 
 	"github.com/google/uuid"

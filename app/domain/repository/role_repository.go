@@ -5,8 +5,8 @@ import (
 	"github.com/google/uuid"
 	"time"
 
-	mb "github.com/jiveio/fluentmodel" // Model builder
-	qb "github.com/jiveio/fluentsql"   // Query builder
+	mb "app/core/fluentmodel" // Model builder
+	qb "app/core/fluentsql"   // Query builder
 )
 
 // RoleRepository struct for queries from a Role model.

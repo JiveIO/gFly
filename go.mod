@@ -9,10 +9,11 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.48.1
 	github.com/flosch/pongo2/v6 v6.0.0
 	github.com/go-playground/validator/v10 v10.17.0
+	github.com/go-sql-driver/mysql v1.7.1
 	github.com/google/uuid v1.6.0
 	github.com/hibiken/asynq v0.24.1
-	github.com/jiveio/fluentmodel v1.1.0
-	github.com/jiveio/fluentsql v1.3.9
+	github.com/jackc/pgx/v5 v5.6.0
+	github.com/jmoiron/sqlx v1.3.5
 	github.com/joho/godotenv v1.5.1
 	github.com/redis/go-redis/v9 v9.4.0
 	github.com/robfig/cron/v3 v3.0.1
@@ -54,16 +55,13 @@ require (
 	github.com/go-openapi/swag v0.22.9 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/gookit/color v1.5.4 // indirect
 	github.com/huandu/xstrings v1.4.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20231201235250-de7065d80cb9 // indirect
-	github.com/jackc/pgx/v5 v5.5.2 // indirect
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
-	github.com/jmoiron/sqlx v1.3.5 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/compress v1.17.5 // indirect
 	github.com/leodido/go-urn v1.3.0 // indirect
