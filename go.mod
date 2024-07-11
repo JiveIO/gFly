@@ -1,6 +1,6 @@
 module app
 
-go 1.21.5
+go 1.21.12
 
 require (
 	github.com/Delta456/box-cli-maker/v2 v2.3.0
