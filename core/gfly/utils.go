@@ -7,13 +7,6 @@ import (
 	"strings"
 )
 
-// fileExt Extract extension of file. Reference utils.FileExt
-func fileExt(fileName string) string {
-	filePart := strings.Split(fileName, ".")
-
-	return filePart[len(filePart)-1]
-}
-
 // startupMessage Startup message.
 func startupMessage(url, name, env string) {
 	Box := box.New(box.Config{Px: 5, Py: 1, Type: "Round", Color: "Cyan", ContentAlign: "Center", TitleColor: "Magenta", ContentColor: "Green"})

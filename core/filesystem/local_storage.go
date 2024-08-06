@@ -3,8 +3,10 @@
 package filesystem
 
 import (
+	"app/core/caching"
 	"app/core/log"
 	"app/core/utils"
+	"context"
 	"fmt"
 	"io"
 	"os"
@@ -45,33 +47,7 @@ func (s *LocalStorage) Path(path string) string {
 
 // Put Create file by content
 func (s *LocalStorage) Put(path, contents string, options ...interface{}) bool {
-	// Create file
-	file, err := os.Create(s.Path(path))
-	if err != nil {
-		log.Errorf("Unable create file %q. Here's why: %v\n", path, err)
-
-		return false
-	}
-
-	// Defer to close file
-	defer func(file *os.File) {
-		err := file.Close()
-		if err != nil {
-			log.Errorf("Unable to close file %q. Here's why: %v\n", path, err)
-		}
-	}(file)
-
-	byteData := []byte(contents)
-
-	_, err = file.Write(byteData)
-
-	if err != nil {
-		log.Errorf("Unable to write file %q. Here's why: %v\n", path, err)
-
-		return false
-	}
-
-	return true
+	return s.PutData(path, []byte(contents))
 }
 
 func (s *LocalStorage) PutFile(path string, fileSource *os.File, options ...interface{}) bool {
@@ -288,4 +264,60 @@ func (s *LocalStorage) Append(path, data string) bool {
 	}
 
 	return true
+}
+
+// PutData Create file by content
+func (s *LocalStorage) PutData(path string, contents []byte) bool {
+	// Create file
+	file, err := os.Create(s.Path(path))
+	if err != nil {
+		log.Errorf("Unable create file %q. Here's why: %v\n", path, err)
+
+		return false
+	}
+
+	// Defer to close file
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			log.Errorf("Unable to close file %q. Here's why: %v\n", path, err)
+		}
+	}(file)
+
+	_, err = file.Write(contents)
+
+	if err != nil {
+		log.Errorf("Unable to write file %q. Here's why: %v\n", path, err)
+
+		return false
+	}
+
+	return true
+}
+
+// PreSignerObject generate Pre sign URL for a object for uploading
+func (s *LocalStorage) PreSignerObject(uploadEndpoint, object string) string {
+	// Create a new Redis connection.
+	cache, err := caching.New()
+	if err != nil {
+		log.Fatalf("Unable create caching client. Here's why: %v", err)
+	}
+
+	// Make random data
+	currentTime := time.Now().Format("20060102150405")
+	randomNum := utils.RandInt64(20)
+	// Token
+	value := utils.Sha256(object, currentTime, randomNum)
+	// File name
+	fileName := fmt.Sprintf("%s.%s", value, utils.FileExt(object))
+
+	// Caching Key
+	key := caching.Key(fmt.Sprintf("storage:%s", value))
+
+	// Save refresh token to Redis.
+	if err = cache.Set(context.Background(), key, value, time.Duration(30)*time.Minute).Err(); err != nil {
+		log.Fatalf("Signin error '%v'", err)
+	}
+
+	return fmt.Sprintf("%s/%s?G-Key=%s&G-Time=%s", uploadEndpoint, fileName, value, currentTime)
 }

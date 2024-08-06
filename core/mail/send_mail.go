@@ -40,10 +40,10 @@ func Send(envelop Envelop) {
 	e.Text = []byte(envelop.Text)
 	e.HTML = []byte(envelop.HTML)
 
-	address := fmt.Sprintf("%s:%d", utils.Getenv("MAIL_HOST", ""), utils.Getenv("MAIL_PORT", 587))
+	host := utils.Getenv("MAIL_HOST", "")
+	address := fmt.Sprintf("%s:%d", host, utils.Getenv("MAIL_PORT", 587))
 	username := utils.Getenv("MAIL_USERNAME", "")
 	password := utils.Getenv("MAIL_PASSWORD", "")
-	host := utils.Getenv("MAIL_HOST", "")
 
 	err := e.Send(address, smtp.PlainAuth("", username, password, host))
 	if err != nil {

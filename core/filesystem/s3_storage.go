@@ -4,6 +4,7 @@ package filesystem
 
 import (
 	"app/core/errors"
+	"app/core/gfly"
 	"app/core/log"
 	"app/core/utils"
 	"context"
@@ -96,7 +97,7 @@ func (s *S3Storage) Put(path, contents string, options ...interface{}) bool {
 	localStorage := NewLocalStorage()
 
 	// Put content to temporary dir at local.
-	tempPath := fmt.Sprintf("%s/%s", os.Getenv("TEMP_DIR"), utils.FileName(path))
+	tempPath := fmt.Sprintf("%s/%s", gfly.TempDir, utils.FileName(path))
 	localStorage.Put(tempPath, contents)
 
 	// Open file source

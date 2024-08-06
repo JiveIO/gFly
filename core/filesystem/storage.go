@@ -18,11 +18,16 @@ const (
 	StorageLocal  = StorageType("local")
 )
 
+// GetStorageType obtains default storage type of app
+func GetStorageType() StorageType {
+	return StorageType(utils.Getenv("FILESYSTEM_TYPE", "local"))
+}
+
 // New Create storage instance.
 func New(storageType ...StorageType) IStorage {
 	var storage StorageType
 
-	storage = StorageType(utils.Getenv("FILESYSTEM_TYPE", "local"))
+	storage = GetStorageType()
 
 	if len(storageType) > 0 {
 		storage = storageType[0]

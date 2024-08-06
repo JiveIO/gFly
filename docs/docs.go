@@ -25,7 +25,7 @@ const docTemplate = `{
     "paths": {
         "/info": {
             "get": {
-                "description": "Get API information",
+                "description": "Get API server information",
                 "consumes": [
                     "application/json"
                 ],
@@ -33,7 +33,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Mics"
+                    "Misc"
                 ],
                 "summary": "Get API info",
                 "responses": {

@@ -1,5 +1,5 @@
-ARG GO_VERSION="1.21.6"
-ARG ALPINE_VERSION="3.19"
+ARG GO_VERSION="1.22"
+ARG ALPINE_VERSION="3.20"
 FROM golang:${GO_VERSION}-alpine${ALPINE_VERSION}
 
 EXPOSE 80 443
@@ -41,7 +41,7 @@ RUN addgroup -g $hostGID gfly &&\
 RUN go install -v github.com/go-critic/go-critic/cmd/gocritic@latest
 RUN go install golang.org/x/vuln/cmd/govulncheck@latest
 RUN go install github.com/swaggo/swag/cmd/swag@latest
-RUN go install github.com/cosmtrek/air@latest
+RUN go install github.com/air-verse/air@latest
 RUN curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.18.2
 RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.55.2
 RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.16.2/migrate.linux-amd64.tar.gz | tar xvz && \

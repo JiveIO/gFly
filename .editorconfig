@@ -1,0 +1,21 @@
+; https://editorconfig.org/
+
+root = true
+
+[*]
+insert_final_newline = true
+charset = utf-8
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[{Makefile,go.mod,go.sum,*.go,.gitmodules}]
+indent_style = tab
+
+[*.md]
+trim_trailing_whitespace = false
+
+[{*.js,*.ts,*.tsx,*.css,*.json,*.html}]
+end_of_line = lf
+indent_size = 2
+

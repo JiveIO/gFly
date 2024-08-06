@@ -30,7 +30,7 @@ func (h *MailNotificationHandler) Notify() {
 		envelop.Cc = []string{data.Cc}
 	}
 
-	mail.Send(envelop)
-
 	log.Tracef("Send via Mail data %v", data)
+
+	mail.Send(envelop)
 }

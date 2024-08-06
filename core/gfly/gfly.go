@@ -14,11 +14,27 @@ import (
 // ===========================================================================================================
 
 var (
-	AppName      = os.Getenv("APP_NAME")
-	AppURL       = os.Getenv("APP_URL")
-	AppEnv       = os.Getenv("APP_ENV")
-	TemporaryDir = os.Getenv("TEMP_DIR")
-	PrefixAPI    = fmt.Sprintf("/%s/%s", os.Getenv("API_PREFIX"), os.Getenv("API_VERSION"))
+	// Application
+
+	AppName   = utils.Getenv("APP_NAME", "gFly")
+	AppURL    = utils.Getenv("APP_URL", "http://localhost:7789")
+	AppEnv    = utils.Getenv("APP_ENV", "local")
+	PrefixAPI = fmt.Sprintf("/%s/%s",
+		utils.Getenv("API_PREFIX", "api"),
+		utils.Getenv("API_VERSION", "v1"),
+	)
+	ApiURL = fmt.Sprintf("%s/%s/%s",
+		utils.Getenv("APP_URL", "http://localhost:7789"),
+		utils.Getenv("API_PREFIX", "api"),
+		utils.Getenv("API_VERSION", "v1"),
+	)
+
+	// Storage directory
+
+	StorageDir = utils.Getenv("STORAGE_DIR", "storage")   // Directory `{APP}/storage`
+	TempDir    = utils.Getenv("TEMP_DIR", "storage/temp") // Directory `{APP}/storage/temp`
+	LogDir     = utils.Getenv("LOG_DIR", "storage/log")   // Directory `{APP}/storage/log`
+	AppDir     = utils.Getenv("APP_DIR", "storage/app")   // Directory `{APP}/storage/app`
 )
 
 // IFly Interface to declare all methods for gFly struct.

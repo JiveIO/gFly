@@ -513,8 +513,8 @@ func (c *Ctx) FormUpload(files ...string) ([]UploadedFile, error) {
 			}
 
 			// Create temporary file.
-			tempName := fmt.Sprintf("%s.%s", uuid.New(), fileExt(header.Filename))
-			filePath := fmt.Sprintf("%s/%s", TemporaryDir, tempName)
+			tempName := fmt.Sprintf("%s.%s", uuid.New(), utils.FileExt(header.Filename))
+			filePath := fmt.Sprintf("%s/%s", TempDir, tempName)
 
 			// Save file
 			err = fasthttp.SaveMultipartFile(header, filePath)
@@ -535,11 +535,11 @@ func (c *Ctx) FormUpload(files ...string) ([]UploadedFile, error) {
 			return nil, err
 		}
 
-		for _, v := range form.File {
+		for name, v := range form.File {
 			for _, header := range v {
 				// Create temporary file.
-				tempName := fmt.Sprintf("%s.%s", uuid.New(), fileExt(header.Filename))
-				filePath := fmt.Sprintf("%s/%s", TemporaryDir, tempName)
+				tempName := fmt.Sprintf("%s.%s", uuid.New(), utils.FileExt(header.Filename))
+				filePath := fmt.Sprintf("%s/%s", TempDir, tempName)
 
 				err = fasthttp.SaveMultipartFile(header, filePath)
 				if err != nil {
@@ -550,7 +550,7 @@ func (c *Ctx) FormUpload(files ...string) ([]UploadedFile, error) {
 					Name:  header.Filename,
 					Path:  filePath,
 					Size:  header.Size,
-					Field: "N/A",
+					Field: name,
 				})
 			}
 		}

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"app/app/http/response"
 	"app/core/gfly"
 	"fmt"
 	"os"
@@ -22,21 +23,21 @@ type DefaultApi struct {
 
 // Handle Process main logic for API.
 // @Summary Get API info
-// @Description Get API information
-// @Tags Mics
+// @Description Get API server information
+// @Tags Misc
 // @Accept json
 // @Produce json
 // @Success 200 {object} response.ServerInfo
 // @Router /info [get]
 func (h *DefaultApi) Handle(c *gfly.Ctx) error {
-	obj := map[string]any{
-		"name": os.Getenv("API_NAME"),
-		"prefix": fmt.Sprintf(
+	obj := response.ServerInfo{
+		Name: os.Getenv("API_NAME"),
+		Prefix: fmt.Sprintf(
 			"/%s/%s",
 			os.Getenv("API_PREFIX"),
 			os.Getenv("API_VERSION"),
 		),
-		"server": os.Getenv("APP_NAME"),
+		Server: os.Getenv("APP_NAME"),
 	}
 
 	return c.JSON(obj)

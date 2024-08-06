@@ -1,4 +1,4 @@
-package gfly
+package caching
 
 import (
 	"app/core/utils"
@@ -6,8 +6,8 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-// Caching func for connecting to Redis server.
-func Caching() (*redis.Client, error) {
+// New func for connecting to Redis server.
+func New() (*redis.Client, error) {
 	// Define Redis database number.
 	dbNumber := utils.Getenv("REDIS_DB_NUMBER", 0)
 
@@ -26,4 +26,9 @@ func Caching() (*redis.Client, error) {
 	}
 
 	return redis.NewClient(options), nil
+}
+
+// Key wrapper key
+func Key(key string) string {
+	return fmt.Sprintf("%s:%s", utils.Getenv("APP_CODE", "gfly"), key)
 }
