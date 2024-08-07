@@ -1,0 +1,33 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Main
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+    runs-on: self-hosted
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build
+      run: make build && make doc
+
+  test:
+    needs: build
+    runs-on: self-hosted
+    steps:
+    - name: Test
+      run: make test
+
+  clean:
+      needs: test
+      runs-on: self-hosted
+      steps:
+      - name: Clean
+        run: make clean
+
