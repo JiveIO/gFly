@@ -1,11 +1,11 @@
 module gfly
 
-go 1.23.0
+go 1.22.6
 
 require (
 	github.com/gflydev/cache v1.0.2
 	github.com/gflydev/console v1.0.0
-	github.com/gflydev/core v1.10.2
+	github.com/gflydev/core v1.10.3
 	github.com/gflydev/db v1.1.0
 	github.com/gflydev/db/psql v1.1.0
 	github.com/gflydev/notification/mail v1.0.1

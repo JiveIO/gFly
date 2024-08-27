@@ -60,8 +60,7 @@ func (q *RoleRepository) GetRolesByUserID(userID int) []models.Role {
 // AddRoleForUserID query for adding role for given user ID.
 func (q *RoleRepository) AddRoleForUserID(userID int, slug string) error {
 	// Define role variable.
-	var role *models.Role
-	role = q.GetRoleBySlug(slug)
+	role := q.GetRoleBySlug(slug)
 	if role == nil {
 		return errors.New("Role not found")
 	}
