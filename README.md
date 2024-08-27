@@ -74,7 +74,7 @@ Declare `HelloPage` into `app/http/routes/web_routes.go`
 package routes
 
 import (
-    "app/app/http/controllers/page"
+    "gfly/app/http/controllers/page"
     "app/core/gfly"
 )
 
@@ -140,7 +140,7 @@ Declare `HelloApi` into `app/http/routes/api_routes.go`
 package routes
 
 import (
-    "app/app/http/controllers/api"
+    "gfly/app/http/controllers/api"
     "app/core/gfly"
     "fmt"
     "os"

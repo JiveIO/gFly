@@ -1,11 +1,10 @@
 package routes
 
 import (
-	"app/core/gfly"
+	"github.com/gflydev/core"
 )
 
-// AppRoutes func for describe all routes in system.
-func AppRoutes(f gfly.IFly) {
-	ApiRoutes(f) // Register API routes.
-	WebRoutes(f) // Register Web routes.
+func Router(r core.IFlyRouter) {
+	ApiRoutes(r) // Register API routes.
+	WebRoutes(r) // Register Web routes.
 }

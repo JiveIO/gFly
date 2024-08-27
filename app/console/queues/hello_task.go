@@ -1,11 +1,11 @@
 package queues
 
 import (
-	"app/core/console"
-	"app/core/log"
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/gflydev/console"
+	"github.com/gflydev/core/log"
 	"github.com/hibiken/asynq"
 )
 

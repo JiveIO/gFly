@@ -1,10 +1,21 @@
 package main
 
 import (
-	"app/app/http/routes"
-	"app/core/gfly"
-	"app/core/middleware"
-	"app/docs"
+	"gfly/app/http/routes"
+	"gfly/docs"
+	"github.com/gflydev/cache"
+	cacheRedis "github.com/gflydev/cache/redis"
+	"github.com/gflydev/core"
+	"github.com/gflydev/core/log"
+	mb "github.com/gflydev/db"
+	dbPSQL "github.com/gflydev/db/psql"
+	notificationMail "github.com/gflydev/notification/mail"
+	"github.com/gflydev/session"
+	sessionRedis "github.com/gflydev/session/redis"
+	"github.com/gflydev/storage"
+	storageLocal "github.com/gflydev/storage/local"
+	"github.com/gflydev/view/pongo"
+	"github.com/joho/godotenv"
 )
 
 // Main function
@@ -29,17 +40,37 @@ func main() {
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
-	app := gfly.New()
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file %v", err)
+	}
 
-	// Add global middlewares
-	app.Use(middleware.CORS(map[string]string{
-		gfly.HeaderAccessControlAllowOrigin: middleware.AllowedOrigin,
-	}))
+	// Register view
+	core.RegisterView(pongo.New())
 
-	routes.AppRoutes(app)
+	// Register mail notification
+	notificationMail.AutoRegister()
 
-	// curl -X GET http://localhost:7789/index.html
-	app.ServeFiles()
+	// Register Local storage
+	storage.Register(storageLocal.Type, storageLocal.New())
 
-	app.Start()
+	// Setup session
+	session.Register(sessionRedis.New())
+	core.RegisterSession(session.New())
+
+	// Register Redis cache
+	cache.Register(cacheRedis.New())
+
+	// Register DB driver & Load Model builder
+	mb.Register(dbPSQL.New())
+	mb.Load()
+
+	// Initial application
+	app := core.New()
+
+	// Register router
+	app.RegisterRouter(routes.Router)
+
+	// Run application
+	app.Run()
 }

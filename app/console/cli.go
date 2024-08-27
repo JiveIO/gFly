@@ -1,10 +1,10 @@
 package main
 
 import (
-	_ "app/app/console/commands"  // Autoload commands into pool.
-	_ "app/app/console/queues"    // Autoload tasks into queue.
-	_ "app/app/console/schedules" // Autoload jobs into schedule.
-	"app/core/console"
+	_ "gfly/app/console/commands"  // Autoload commands into pool.
+	_ "gfly/app/console/queues"    // Autoload tasks into queue.
+	_ "gfly/app/console/schedules" // Autoload jobs into schedule.
+	"github.com/gflydev/console"
 	_ "github.com/joho/godotenv/autoload" // load .env file automatically
 	"os"
 )

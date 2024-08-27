@@ -1,9 +1,9 @@
 package commands
 
 import (
-	"app/app/console/queues"
-	"app/core/console"
-	"app/core/log"
+	"gfly/app/console/queues"
+	"github.com/gflydev/console"
+	"github.com/gflydev/core/log"
 	"time"
 )
 

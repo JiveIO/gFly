@@ -1,12 +1,12 @@
 package routes
 
 import (
-	"app/app/http/controllers/page"
-	"app/core/gfly"
+	"gfly/app/http/controllers/page"
+	"github.com/gflydev/core"
 )
 
 // WebRoutes func for describe a group of Web page routes.
-func WebRoutes(f gfly.IFly) {
+func WebRoutes(r core.IFlyRouter) {
 	// Web Routers
-	f.GET("/", page.NewHomePage())
+	r.GET("/", page.NewHomePage())
 }

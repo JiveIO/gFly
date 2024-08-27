@@ -1,11 +1,19 @@
 package models
 
 import (
-	mb "app/core/fluentmodel"
+	mb "github.com/gflydev/db"
 	"time"
-
-	"github.com/google/uuid"
 )
+
+// ====================================================================
+// ============================ Data Types ============================
+// ====================================================================
+
+// N/A
+
+// ====================================================================
+// ============================== Table ===============================
+// ====================================================================
 
 // TableUserRole Table name
 const TableUserRole = "user_roles"
@@ -16,8 +24,8 @@ type UserRole struct {
 	MetaData mb.MetaData `db:"-" model:"table:user_roles"`
 
 	// Table fields
-	ID        uuid.UUID `db:"id" model:"name:id; type:uuid,primary"`
-	RoleID    uuid.UUID `db:"role_id" model:"name:role_id; type:uuid"`
-	UserID    uuid.UUID `db:"user_id" model:"name:user_id; type:uuid"`
+	ID        int       `db:"id" model:"name:id; type:int,primary"`
+	RoleID    int       `db:"role_id" model:"name:role_id; type:int"`
+	UserID    int       `db:"user_id" model:"name:user_id; type:int"`
 	CreatedAt time.Time `db:"created_at" model:"name:created_at"`
 }

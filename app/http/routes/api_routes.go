@@ -1,23 +1,23 @@
 package routes
 
 import (
-	"app/app/http/controllers/api"
-	"app/core/gfly"
 	"fmt"
-	"os"
+	"gfly/app/http/controllers/api"
+	"github.com/gflydev/core"
+	"github.com/gflydev/core/utils"
 )
 
 // ApiRoutes func for describe a group of API routes.
-func ApiRoutes(f gfly.IFly) {
+func ApiRoutes(r core.IFlyRouter) {
 	prefixAPI := fmt.Sprintf(
 		"/%s/%s",
-		os.Getenv("API_PREFIX"),
-		os.Getenv("API_VERSION"),
+		utils.Getenv("API_PREFIX", "api"),
+		utils.Getenv("API_VERSION", "v1"),
 	)
 
 	// API Routers
-	f.Group(prefixAPI, func(apiRouter *gfly.Group) {
+	r.Group(prefixAPI, func(r *core.Group) {
 		// curl -v -X GET http://localhost:7789/api/v1/info | jq
-		apiRouter.GET("/info", api.NewDefaultApi())
+		r.GET("/info", api.NewDefaultApi())
 	})
 }

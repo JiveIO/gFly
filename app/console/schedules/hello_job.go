@@ -1,8 +1,8 @@
 package schedules
 
 import (
-	"app/core/console"
-	"app/core/log"
+	"github.com/gflydev/console"
+	"github.com/gflydev/core/log"
 	"time"
 )
 

@@ -1,10 +1,10 @@
 package api
 
 import (
-	"app/app/http/response"
-	"app/core/gfly"
 	"fmt"
-	"os"
+	"gfly/app/http/response"
+	"github.com/gflydev/core"
+	"github.com/gflydev/core/utils"
 )
 
 // ===========================================================================================================
@@ -18,7 +18,7 @@ func NewDefaultApi() *DefaultApi {
 
 // DefaultApi API struct.
 type DefaultApi struct {
-	gfly.Api
+	core.Api
 }
 
 // Handle Process main logic for API.
@@ -29,15 +29,15 @@ type DefaultApi struct {
 // @Produce json
 // @Success 200 {object} response.ServerInfo
 // @Router /info [get]
-func (h *DefaultApi) Handle(c *gfly.Ctx) error {
+func (h *DefaultApi) Handle(c *core.Ctx) error {
 	obj := response.ServerInfo{
-		Name: os.Getenv("API_NAME"),
+		Name: utils.Getenv("API_NAME", "gfly"),
 		Prefix: fmt.Sprintf(
 			"/%s/%s",
-			os.Getenv("API_PREFIX"),
-			os.Getenv("API_VERSION"),
+			utils.Getenv("API_PREFIX", "api"),
+			utils.Getenv("API_VERSION", "v1"),
 		),
-		Server: os.Getenv("APP_NAME"),
+		Server: utils.Getenv("APP_URL", "http://localhost:7789"),
 	}
 
 	return c.JSON(obj)

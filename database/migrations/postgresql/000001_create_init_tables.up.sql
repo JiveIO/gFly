@@ -6,7 +6,7 @@ CREATE TYPE user_status AS ENUM ('pending', 'active', 'blocked');
 CREATE TABLE users (
                        id SERIAL PRIMARY KEY,
                        email VARCHAR (255) NOT NULL UNIQUE,
-                       password_hash VARCHAR (255) NOT NULL,
+                       password VARCHAR (255) NOT NULL,
                        fullname VARCHAR (255) NULL,
                        phone VARCHAR(20) NULL,
                        token VARCHAR (100) NULL,
@@ -92,7 +92,7 @@ CREATE TABLE address (
 -- ------------------------------------ Initial data ------------------------------------
 -- --------------------------------------------------------------------------------------
 -- P@seWor9  ===>  $2a$04$9QD944312deeQjnxF.zNauGx7NQ0GtS.xJhLy.zWqWxOE8B/XCN9i
-INSERT INTO users (email, password_hash, fullname, phone, token, status, avatar, created_at, updated_at)
+INSERT INTO users (email, password, fullname, phone, token, status, avatar, created_at, updated_at)
 VALUES ('admin@gfly.dev', '$2a$04$9QD944312deeQjnxF.zNauGx7NQ0GtS.xJhLy.zWqWxOE8B/XCN9i', 'Admin', '0989831911', null, 'active', 'https://www.gfly.dev/assets/avatar.png', '2024-05-15 13:07:48.888668 +07:00', '2024-05-15 13:07:48.888668 +07:00');
 
 insert into user_roles (role_id, user_id, created_at)

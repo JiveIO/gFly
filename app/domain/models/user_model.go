@@ -1,12 +1,31 @@
 package models
 
 import (
-	mb "app/core/fluentmodel"
 	"database/sql"
+	mb "github.com/gflydev/db"
 	"time"
-
-	"github.com/google/uuid"
 )
+
+// ====================================================================
+// ============================ Data Types ============================
+// ====================================================================
+
+// User property types
+const (
+	UserStatusActive  = "active"
+	UserStatusPending = "pending"
+	UserStatusBlocked = "blocked"
+)
+
+var UserState = []string{
+	UserStatusActive,
+	UserStatusPending,
+	UserStatusBlocked,
+}
+
+// ====================================================================
+// ============================== Table ===============================
+// ====================================================================
 
 // TableUser Table name
 const TableUser = "users"
@@ -17,14 +36,15 @@ type User struct {
 	MetaData mb.MetaData `db:"-" model:"table:users"`
 
 	// Table fields
-	ID           uuid.UUID      `db:"id" model:"name:id; type:uuid,primary"`
+	ID           int            `db:"id" model:"name:id; type:serial,primary"`
 	Email        string         `db:"email" model:"name:email"`
-	PasswordHash string         `db:"password_hash" model:"name:password_hash"`
+	Password     string         `db:"password" model:"name:password"`
 	Fullname     string         `db:"fullname" model:"name:fullname"`
 	Phone        string         `db:"phone" model:"name:phone"`
 	Token        sql.NullString `db:"token" model:"name:token"`
-	Status       int            `db:"status" model:"name:status"`
+	Status       string         `db:"status" model:"name:status"`
 	CreatedAt    time.Time      `db:"created_at" model:"name:created_at"`
+	Avatar       sql.NullString `db:"avatar" model:"name:avatar"`
 	UpdatedAt    time.Time      `db:"updated_at" model:"name:updated_at"`
 	VerifiedAt   sql.NullTime   `db:"verified_at" model:"name:verified_at"`
 	BlockedAt    sql.NullTime   `db:"blocked_at" model:"name:blocked_at"`

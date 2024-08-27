@@ -4,8 +4,8 @@ APP_NAME = app
 CLI_NAME = artisan
 BUILD_DIR = $(PWD)/build
 DOCKER_PATH = /home/gfly/app
-MIGRATION_FOLDER = $(DOCKER_PATH)/database/migrations/postgresql
-DATABASE_URL = postgres://user:secret@db:5432/gfly?sslmode=disable
+MIGRATION_FOLDER = database/migrations/postgresql
+DATABASE_URL = postgres://user:secret@postgres.local.orb.local:5432/gfly?sslmode=disable
 #MIGRATION_FOLDER = $(DOCKER_PATH)/database/migrations/mysql
 #DATABASE_URL = mysql://user:secret@tcp(db:3306)/gfly
 
@@ -61,7 +61,7 @@ release:
 	# 64-bit - Linux
 	GOOS=linux GOARCH=amd64 go build -o $(BUILD_DIR)/$(APP_NAME)-amd64-linux *.go
 	# 64-bit - Linux ARM
-	#GOOS=linux GOARCH=arm64 go build -o $(BUILD_DIR)/$(APP_NAME)-arm64-linux *.go
+	GOOS=linux GOARCH=arm64 go build -o $(BUILD_DIR)/$(APP_NAME)-arm64-linux *.go
 
 release.windows:
 	mkdir -p bin

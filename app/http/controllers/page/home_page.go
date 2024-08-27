@@ -1,8 +1,6 @@
 package page
 
-import (
-	"app/core/gfly"
-)
+import "github.com/gflydev/core"
 
 // ===========================================================================================================
 // 											Home page
@@ -14,9 +12,9 @@ func NewHomePage() *HomePage {
 }
 
 type HomePage struct {
-	gfly.Page
+	core.Page
 }
 
-func (m *HomePage) Handle(c *gfly.Ctx) error {
+func (m *HomePage) Handle(c *core.Ctx) error {
 	return c.Redirect("/index.html")
 }
