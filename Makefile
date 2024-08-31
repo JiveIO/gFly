@@ -4,7 +4,7 @@ APP_NAME = app
 CLI_NAME = artisan
 BUILD_DIR = $(PWD)/build
 MIGRATION_FOLDER = database/migrations/postgresql
-DATABASE_URL = postgres://user:secret@postgres.local.orb.local:5432/gfly?sslmode=disable
+DATABASE_URL = postgres://user:secret@localhost:5432/gfly?sslmode=disable
 
 all: lint test doc build
 
