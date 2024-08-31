@@ -1,60 +1,6 @@
-version: '3.2'
-
 services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        hostUID: 1000
-        hostGID: 1000
-    image: gfly-web
-    hostname: gfly-web
-    container_name: gfly-web
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    labels:
-      SERVICE_NAME: gfly-web
-      SERVICE_80_NAME: gfly-web
-      SERVICE_443_NAME: gfly-web
-    ports:
-     - '7789:7789'
-    depends_on:
-      db:
-        condition: service_healthy
-      mail:
-        condition: service_started
-      redis:
-        condition: service_started
-    environment:
-      APP_ENV: local
-    volumes:
-      - ../:/home/gfly/app
-
-#  db:
-#    image: mysql:8.0.25
-#    hostname: gfly-db
-#    container_name: gfly-db
-#    environment:
-#      MYSQL_ROOT_PASSWORD: secret
-#      MYSQL_DATABASE: gfly
-#      MYSQL_USER: user
-#      MYSQL_PASSWORD: secret
-#    labels:
-#      SERVICE_NAME: gfly-db
-#      SERVICE_3306_NAME: gfly-db
-#      SERVICE_33060_NAME: gfly-db
-#    ports:
-#      - '33060:3306'
-#    healthcheck:
-#      test: "/usr/bin/mysql --user=user --password=secret --execute \"SHOW DATABASES;\""
-#      interval: 3s
-#      timeout: 3s
-#      retries: 10
-#    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci --default-authentication-plugin=mysql_native_password
-
   db:
-    image: postgres:16.1-alpine
+    image: postgres:16.4-alpine
     hostname: gfly-db
     container_name: gfly-db
     environment:
@@ -67,7 +13,7 @@ services:
       SERVICE_5432_NAME: gfly-db
       SERVICE_54320_NAME: gfly-db
     ports:
-      - 54320:5432
+      - "5432:5432"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U user -d gfly" ]
       interval: 3s
@@ -75,17 +21,34 @@ services:
       retries: 10
 
   mail:
-    image: mailhog/mailhog
+    image: axllent/mailpit
     hostname: gfly-mail
     container_name: gfly-mail
     labels:
-        SERVICE_NAME: gfly-mail
+      SERVICE_NAME: gfly-mail
     ports:
-      - '8025:8025'
+      - "8025:8025"
+      - "1025:1025"
+    environment:
+      MP_MAX_MESSAGES: 5000
+      # No TLS
+      MP_SMTP_AUTH_ALLOW_INSECURE: true
+      # TLS
+      #MP_SMTP_TLS_CERT: /data/cert.pem
+      #MP_SMTP_TLS_KEY: /data/key.pem
+      MP_SMTP_AUTH_FILE: /data/authfile
+      TZ: Europe/London
+    volumes:
+      - ./mailpit:/data
 
   redis:
-    image: redis:6.2.5-alpine3.14
+    image: redis:7.4.0-alpine
     hostname: gfly-redis
     container_name: gfly-redis
     labels:
       SERVICE_NAME: gfly-redis
+    ports:
+      - "6379:6379"
+    env_file:
+      - redis/redis.env
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_HOST_PASSWORD"

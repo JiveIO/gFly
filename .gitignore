@@ -38,3 +38,4 @@ Dev/
 .env
 *.local
 .cache
+main

@@ -11,6 +11,7 @@ require (
 	github.com/gflydev/notification/mail v1.0.1
 	github.com/gflydev/session v1.0.1
 	github.com/gflydev/session/redis v1.0.1
+	github.com/gflydev/storage v1.1.0
 	github.com/gflydev/storage/local v1.1.0
 	github.com/gflydev/view/pongo v1.0.2
 	github.com/google/uuid v1.6.0
@@ -28,7 +29,6 @@ require (
 	github.com/flosch/pongo2/v6 v6.0.0 // indirect
 	github.com/gflydev/mail v1.0.1 // indirect
 	github.com/gflydev/notification v1.0.0 // indirect
-	github.com/gflydev/storage v1.1.0 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/jsonreference v0.21.0 // indirect
 	github.com/go-openapi/spec v0.21.0 // indirect
