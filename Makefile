@@ -14,6 +14,8 @@ lint:
 test:
 	go test -v -timeout 30s -coverprofile=cover.out -cover ./...
 	go tool cover -func=cover.out
+
+test.coverage:
 	go tool cover -html=cover.out
 
 build: lint test

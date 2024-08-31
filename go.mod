@@ -8,13 +8,13 @@ require (
 	github.com/gflydev/core v1.10.3
 	github.com/gflydev/db v1.1.0
 	github.com/gflydev/db/psql v1.1.0
+	github.com/gflydev/notification v1.0.0
 	github.com/gflydev/notification/mail v1.0.1
 	github.com/gflydev/session v1.0.1
 	github.com/gflydev/session/redis v1.0.1
 	github.com/gflydev/storage v1.1.0
 	github.com/gflydev/storage/local v1.1.0
 	github.com/gflydev/view/pongo v1.0.2
-	github.com/google/uuid v1.6.0
 	github.com/hibiken/asynq v0.24.1
 	github.com/jiveio/fluentsql v1.3.9
 	github.com/joho/godotenv v1.5.1
@@ -28,12 +28,12 @@ require (
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/flosch/pongo2/v6 v6.0.0 // indirect
 	github.com/gflydev/mail v1.0.1 // indirect
-	github.com/gflydev/notification v1.0.0 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/jsonreference v0.21.0 // indirect
 	github.com/go-openapi/spec v0.21.0 // indirect
 	github.com/go-openapi/swag v0.23.0 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/pgx/v5 v5.6.0 // indirect

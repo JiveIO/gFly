@@ -3,7 +3,6 @@ package repository
 import (
 	"gfly/app/domain/models"
 	mb "github.com/gflydev/db" // Model builder
-	"github.com/google/uuid"
 )
 
 // UserRepository struct for queries from a User model.
@@ -28,7 +27,7 @@ func (q *UserRepository) findOne(field string, value any) *models.User {
 }
 
 // GetUserByID query for getting one User by given ID.
-func (q *UserRepository) GetUserByID(id uuid.UUID) *models.User {
+func (q *UserRepository) GetUserByID(id int) *models.User {
 	return q.findOne("id", id)
 }
 

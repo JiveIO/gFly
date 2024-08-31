@@ -2,7 +2,6 @@ package repository
 
 import (
 	"gfly/app/domain/models"
-	"github.com/google/uuid"
 )
 
 // ====================================================================
@@ -28,7 +27,7 @@ var Pool = &Repositories{
 type (
 	// IUserRepository an interface for any repository implementation.
 	IUserRepository interface {
-		GetUserByID(id uuid.UUID) *models.User
+		GetUserByID(id int) *models.User
 		GetUserByEmail(email string) *models.User
 		CreateUser(u *models.User) error
 		UpdateUser(u *models.User) error
@@ -38,8 +37,8 @@ type (
 
 	// IRoleRepository an interface for any repository implementation.
 	IRoleRepository interface {
-		GetRoleBySlug(slug string) (models.Role, error)
-		GetRolesByUserID(userID uuid.UUID) ([]models.Role, error)
-		AddRoleForUserID(userID uuid.UUID, slug string) error
+		GetRoleBySlug(slug string) *models.Role
+		GetRolesByUserID(userID int) []models.Role
+		AddRoleForUserID(userID int, slug string) error
 	}
 )
