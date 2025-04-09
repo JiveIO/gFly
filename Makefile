@@ -21,6 +21,7 @@ test.coverage:
 build: lint test
 	CGO_ENABLED=0 go build -ldflags="-w -s" -o $(BUILD_DIR)/$(APP_NAME) main.go
 	CGO_ENABLED=0 go build -ldflags="-w -s" -o $(BUILD_DIR)/$(CLI_NAME) app/console/cli.go
+	cp .env build/
 
 run: lint test doc build
 	$(BUILD_DIR)/$(APP_NAME)
@@ -60,3 +61,6 @@ docker.stop:
 
 docker.delete:
 	docker-compose -f docker/docker-compose.yml -p gfly down
+
+lib.update:
+	go get -u all

@@ -3,55 +3,50 @@ package repository
 import (
 	"gfly/app/domain/models"
 	"github.com/gflydev/core/errors"
+	"github.com/gflydev/core/log"
 	"time"
 
 	mb "github.com/gflydev/db"       // Model builder
 	qb "github.com/jiveio/fluentsql" // Query builder
 )
 
+// ====================================================================
+// ==================== Role Repository Interface =====================
+// ====================================================================
+
+// IRoleRepository an interface for any repository implementation.
+type IRoleRepository interface {
+	GetRolesByUserID(userID int) []models.Role
+	AddRoleForUserID(userID int, slug string) error
+}
+
+// ====================================================================
+// ==================== Role Repository Implement =====================
+// ====================================================================
+
 // RoleRepository struct for queries from a Role model.
 // The struct is an implementation of interface IRoleRepository
 type RoleRepository struct {
 }
 
-// findOne query that getting one model by a specific field condition.
-func (q *RoleRepository) findOne(field string, value any) *models.Role {
-	// Create an instance of User
-	m := models.Role{}
-
-	// Get model and assign into `m` struct
-	err := mb.GetModel(&m, field, value)
-
-	// Return an empty model
-	if err != nil {
-		return nil
-	}
-
-	return &m
-}
-
-// GetRoleBySlug query for getting role by given slug.
-func (q *RoleRepository) GetRoleBySlug(slug string) *models.Role {
-	return q.findOne("slug", slug)
-}
-
 // GetRolesByUserID query for getting roles by given user ID.
 func (q *RoleRepository) GetRolesByUserID(userID int) []models.Role {
-	// DB Model instance
-	db := mb.Instance()
-
 	// Define role variable.
 	var roles []models.Role
 
-	_, _ = db.Select("roles.*").
-		Join(qb.InnerJoin, "user_roles", qb.Condition{
-			Field: "roles.id",
+	_, err := mb.Instance().Select(models.TableRole+".*").
+		Join(qb.InnerJoin, models.TableUserRole, qb.Condition{
+			Field: models.TableRole + ".id",
 			Opt:   qb.Eq,
-			Value: qb.ValueField("user_roles.role_id"),
+			Value: qb.ValueField(models.TableUserRole + ".role_id"),
 		}).
-		Where("user_roles.user_id", qb.Eq, userID).
+		Where(models.TableUserRole+".user_id", qb.Eq, userID).
 		OrderBy("name", qb.Asc).
 		Find(&roles)
+
+	if err != nil {
+		log.Error(err)
+	}
 
 	// Return query result.
 	return roles
@@ -59,9 +54,15 @@ func (q *RoleRepository) GetRolesByUserID(userID int) []models.Role {
 
 // AddRoleForUserID query for adding role for given user ID.
 func (q *RoleRepository) AddRoleForUserID(userID int, slug string) error {
-	// Define role variable.
-	role := q.GetRoleBySlug(slug)
-	if role == nil {
+	// Get role by slug
+	role, err := mb.GetModel[models.Role](qb.Condition{
+		Field: "slug",
+		Opt:   qb.Eq,
+		Value: slug,
+	})
+	if err != nil || role == nil {
+		log.Error(err)
+
 		return errors.New("Role not found")
 	}
 

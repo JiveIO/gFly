@@ -1,4 +1,4 @@
-# gFly v1.8.0
+# gFly v1.12.1
 
 **Laravel inspired web framework written in Go**
 
@@ -11,24 +11,49 @@ Built on top of [FastHttp - the fastest HTTP engine](https://github.com/valyala/
 ### 1. Install Docker [Docker Desktop](https://www.docker.com/products/docker-desktop/) or [OrbStack](https://orbstack.dev/)
 
 ### 2. Install Golang
+
+### 2.1 On Mac
 ```bash
 # Install go at folder /Users/$USER/Apps
 mkdir -p /Users/$USER/Apps
-wget https://go.dev/dl/go1.22.6.darwin-arm64.tar.gz
-tar -xvzf go1.22.6.darwin-arm64.tar.gz
-
-# So Go root path is /Users/$USER/Apps/go1.22.6
+wget https://go.dev/dl/go1.24.2.darwin-arm64.tar.gz
+tar -xvzf go1.24.2.darwin-arm64.tar.gz
 ```
 Add bottom of file `~/.profile` or `~/.zshrc`
 ```bash
 vi ~/.profile
 
 # ----------- Golang -----------
-export GOROOT=/Users/$USER/Apps/go1.22.6
+export GOROOT=/Users/$USER/Apps/go
 export GOPATH=/Users/$USER/go
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 ```
+Check
+```bash
+source ~/.profile
+# Or
+source ~/.zshrc
 
+# Check Go
+go version
+```
+
+### 2.2 On Linux
+```bash
+# Install go at folder /home/$USER/Apps
+mkdir -p /home/$USER/Apps
+wget https://go.dev/dl/go1.24.2.linux-amd64.tar.gz
+tar -xvzf go1.24.2.linux-amd64.tar.gz
+```
+Add bottom of file `~/.profile` or `~/.zshrc`
+```bash
+vi ~/.profile
+
+# ----------- Golang -----------
+export GOROOT=/home/$USER/Apps/go
+export GOPATH=/home/$USER/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+```
 Check
 ```bash
 source ~/.profile
@@ -60,7 +85,7 @@ go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@lat
 migrate --version
 
 # Install Lint
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.60.3
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.0.2
 
 # Check Lint version
 golangci-lint --version
@@ -68,10 +93,9 @@ golangci-lint --version
 
 ### 4. Create project skeleton from `gFly` repository
 ```bash
-git clone https://github.com/jiveio/gfly.git
-cd gFly
-rm -rf .git*
-cp .env.example .env
+git clone https://github.com/jiveio/gfly.git myweb
+cd myweb 
+rm -rf .git* && cp .env.example .env
 ```
 
 ## II. Start `redis`, `mail`, and `db` services and `application`
@@ -98,22 +122,44 @@ make docker.run
 # Doc
 make doc
 
-# Run
-go run main.go
+# Build (Build CLI and Web)
+make build
 
-# Air
-air main.go
+# Docker run (Create DB, Redis, Mail services)
+make docker.run
+
+# Run
+make dev
 ```
 
-### Check app
+### 4. Check app
 
 Browse URL [http://localhost:7789/](http://localhost:7789/)
 
-Check API `curl -v -X GET http://localhost:7789/api/v1/info | jq`
+Check API  via CLI
+```
+curl -v -X GET http://localhost:7789/api/v1/info | jq
+```
+
+Note: Install [jq](https://jqlang.github.io/jq/) tool to view JSON format
 
 API doc [http://localhost:7789/docs/](http://localhost:7789/docs/)
 
-Note: Install [jq](https://jqlang.github.io/jq/) tool to view JSON format
+### 5. CLI Actions
+
+```bash
+# Run command `hello-world`
+./build/artisan cmd:run hello-world
+
+# Run schedule 
+./build/artisan schedule:run
+
+# Run queue 
+./build/artisan queue:run
+```
+
+Note: You can check more detail about [command](https://doc.gfly.dev/docs/03-digging-deeper/03-01-02.command/), [schedule](https://doc.gfly.dev/docs/03-digging-deeper/03-01-03.schedule/), and [queue](https://doc.gfly.dev/docs/03-digging-deeper/03-01-04.queue/) at link [https://doc.gfly.dev/](https://doc.gfly.dev/)
+
 
 ## III. Service connection
 
@@ -124,94 +170,190 @@ Add some code to check `application` connect to services `redis`, `mail`, and `d
 #### Import initial tables
 ```bash
 make migrate.up
-
->>> migrate -path database/migrations/postgresql -database "postgres://user:secret@localhost:5432/gfly?sslmode=disable" up
->>> 1/u create_init_tables (74.433458ms)
 ```
 
-Update `main.go`
+Note: Check DB connection and see 4 tables: `users`, `roles`, `user_roles`, and `address`.
+
+#### Create command
+
+Create a new command line `db-test`. Add file `app/console/commands/db_command.go` 
+
 ```go
+package commands
+
 import (
-    "gfly/app/domain/repository"
-    "github.com/gflydev/core/log"
+	"gfly/app/domain/models"
+	"github.com/gflydev/console"
+	"github.com/gflydev/core/log"
+	mb "github.com/gflydev/db"
+	"time"
 )
 
-func (h *DefaultApi) Handle(c *core.Ctx) error {
-    // ============== Check database ==============
-    user := repository.Pool.GetUserByEmail("admin@gfly.dev")
-    log.Infof("User %v\n", user)
-    ...
+// ---------------------------------------------------------------
+//                      Register command.
+// ./artisan cmd:run db-test
+// ---------------------------------------------------------------
+
+// Auto-register command.
+func init() {
+	console.RegisterCommand(&DBCommand{}, "db-test")
 }
+
+// ---------------------------------------------------------------
+//                      DBCommand struct.
+// ---------------------------------------------------------------
+
+// DBCommand struct for hello command.
+type DBCommand struct {
+    console.Command
+}
+
+// Handle Process command.
+func (c *DBCommand) Handle() {
+    user, err := mb.GetModelBy[models.User]("email", "admin@gfly.dev")
+    if err != nil || user == nil {
+        log.Panic(err)
+    }
+    log.Infof("User %v\n", user)
+
+    log.Infof("DBCommand :: Run at %s", time.Now().Format("2006-01-02 15:04:05"))
+}
+```
+
+#### Build and run command
+
+```bash
+# Build
+make build
+
+# Run command `db-test`
+ ./build/artisan cmd:run db-test
 ```
 
 ### 2. Connect `Redis` service
 
-Update `main.go`
+Create a new command line `redis-test`. Add file `app/console/commands/redis_command.go` 
+
 ```go
+package commands
+
 import (
-    "github.com/gflydev/cache"
-    "github.com/gflydev/core/log"
-    "time"
+	"github.com/gflydev/cache"
+	"github.com/gflydev/console"
+	"github.com/gflydev/core/log"
+	"time"
 )
 
-func (h *DefaultApi) Handle(c *core.Ctx) error {
-    // ============== Set/Get caching ==============
+// ---------------------------------------------------------------
+//                      Register command.
+// ./artisan cmd:run redis-test
+// ---------------------------------------------------------------
+
+// Auto-register command.
+func init() {
+    console.RegisterCommand(&RedisCommand{}, "redis-test")
+}
+
+// ---------------------------------------------------------------
+//                      RedisCommand struct.
+// ---------------------------------------------------------------
+
+// RedisCommand struct for hello command.
+type RedisCommand struct {
+    console.Command
+}
+
+// Handle Process command.
+func (c *RedisCommand) Handle() {
+    // Add new key
     if err := cache.Set("foo", "Hello world", time.Duration(15*24*3600)*time.Second); err != nil {
         log.Error(err)
     }
+
+    // Get data key
     bar, err := cache.Get("foo")
     if err != nil {
         log.Error(err)
     }
     log.Infof("foo `%v`\n", bar)
-    ...
+
+    log.Infof("RedisCommand :: Run at %s", time.Now().Format("2006-01-02 15:04:05"))
 }
+
+```
+
+#### Build and run command
+
+```bash
+# Build
+make build
+
+# Run command `redis-test`
+ ./build/artisan cmd:run redis-test
 ```
 
 ### 3. Connect `Mail` service
 
-Create new file `reset_password.go` in folder `app/notifications/`
+Create a new command line `mail-test`. Add file `app/console/commands/mail_command.go` 
+
 ```go
-package notifications
+package commands
 
 import (
-    notifyMail "github.com/gflydev/notification/mail"
+	"github.com/gflydev/cache"
+	"github.com/gflydev/console"
+	"github.com/gflydev/core/log"
+	"time"
 )
 
-type ResetPassword struct {
-    Email string
+// ---------------------------------------------------------------
+//                      Register command.
+// ./artisan cmd:run mail-test
+// ---------------------------------------------------------------
+
+// Auto-register command.
+func init() {
+    console.RegisterCommand(&RedisCommand{}, "mail-test")
 }
 
-func (n ResetPassword) ToEmail() notifyMail.Data {
-    return notifyMail.Data{
-        To:      n.Email,
-        Subject: "gFly - Reset password",
-        Body:    "New password was created",
-    }
+// ---------------------------------------------------------------
+//                      MailCommand struct.
+// ---------------------------------------------------------------
+
+// MailCommand struct for hello command.
+type MailCommand struct {
+    console.Command
 }
-```
 
-Update `main.go`
-```go
-import (
-    "gfly/app/notifications"
-    "github.com/gflydev/core/log"
-    "github.com/gflydev/notification"
-)
-
-func (h *DefaultApi) Handle(c *core.Ctx) error {
+// Handle Process command.
+func (c *MailCommand) Handle() {
     // ============== Send mail ==============
     resetPassword := notifications.ResetPassword{
         Email: "admin@gfly.dev",
     }
-    if err = notification.Send(resetPassword); err != nil {
+
+    if err := notification.Send(resetPassword); err != nil {
         log.Error(err)
     }
-    ...
+  
+    log.Infof("RedisCommand :: Run at %s", time.Now().Format("2006-01-02 15:04:05"))
 }
 ```
 
+#### Build and run command
+
+```bash
+# Build
+make build
+
+# Run command `mail-test`
+ ./build/artisan cmd:run mail-test
+```
+
+Check mail at http://localhost:8025/
+
 ### 4. Run command and check Log
+
 ```bash
 curl -X 'GET' http://localhost:7789/api/v1/info
 ```
