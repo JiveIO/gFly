@@ -87,6 +87,9 @@ migrate --version
 # Install Lint
 curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.0.2
 
+# Or (Fix error on Ubuntu)
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sudo sh -s -- -b $(go env GOPATH)/bin v2.0.2 && sudo chown $USER:$USER $(go env GOPATH)/bin/golangci-lint
+
 # Check Lint version
 golangci-lint --version
 ```

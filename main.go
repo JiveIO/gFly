@@ -26,7 +26,7 @@ import (
 // @contact.name API Support
 // @contact.email vinh@jivecode.com
 // @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @license.url https://mit-license.org/
 // @BasePath /api/v1
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
