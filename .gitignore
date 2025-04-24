@@ -21,12 +21,14 @@
 .vscode
 .DS_Store
 .idea
+.junie/
 
 # Dependency directories (remove the comment below to include it)
 /vendor/
 vendor/
 vendor
 /Godeps/
+
 
 # Go workspace file
 go.work

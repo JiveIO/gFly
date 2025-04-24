@@ -24,7 +24,7 @@ import (
 // @description This is an auto-generated API Docs.
 // @termsOfService http://swagger.io/terms/
 // @contact.name API Support
-// @contact.email vinh@jivecode.com
+// @contact.email admin@jivecode.com
 // @license.name Apache 2.0
 // @license.url https://mit-license.org/
 // @BasePath /api/v1
