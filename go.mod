@@ -6,8 +6,8 @@ require (
 	github.com/gflydev/cache v1.0.5
 	github.com/gflydev/console v1.0.2
 	github.com/gflydev/core v1.13.4
-	github.com/gflydev/db v1.6.0
-	github.com/gflydev/db/psql v1.4.3
+	github.com/gflydev/db v1.6.1
+	github.com/gflydev/db/psql v1.4.4
 	github.com/gflydev/notification v1.0.2
 	github.com/gflydev/notification/mail v1.0.2
 	github.com/gflydev/session v1.0.2
@@ -16,7 +16,7 @@ require (
 	github.com/gflydev/storage/local v1.1.4
 	github.com/gflydev/view/pongo v1.0.3
 	github.com/hibiken/asynq v0.25.1
-	github.com/jiveio/fluentsql v1.4.1
+	github.com/jiveio/fluentsql v1.5.1
 	github.com/joho/godotenv v1.5.1
 	github.com/swaggo/swag v1.16.4
 )
@@ -51,7 +51,7 @@ require (
 	github.com/spf13/cast v1.8.0 // indirect
 	github.com/tinylib/msgp v1.2.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasthttp v1.61.0 // indirect
+	github.com/valyala/fasthttp v1.62.0 // indirect
 	golang.org/x/crypto v0.38.0 // indirect
 	golang.org/x/sync v0.14.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect

@@ -22,7 +22,7 @@ import (
 // @title API
 // @version 1.0
 // @description This is an auto-generated API Docs.
-// @termsOfService http://swagger.io/terms/
+// @termsOfService https://swagger.io/terms/
 // @contact.name API Support
 // @contact.email admin@jivecode.com
 // @license.name Apache 2.0

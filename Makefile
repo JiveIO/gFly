@@ -1,4 +1,4 @@
-.PHONY: lint test build run dev
+.PHONY: lint test build run dev check
 
 APP_NAME = app
 CLI_NAME = artisan
@@ -6,10 +6,24 @@ BUILD_DIR = $(PWD)/build
 MIGRATION_FOLDER = database/migrations/postgresql
 DATABASE_URL = postgres://user:secret@localhost:5432/gfly?sslmode=disable
 
-all: lint test doc build
+mod:
+	go list -m --versions
+
+all: critic security vulncheck lint test doc build
+
+check: critic security vulncheck lint ## - Check code style, secure, lint,...
 
 lint:
 	golangci-lint run ./...
+
+critic: ## - Check go critic
+	gocritic check -enableAll -disable=unnamedResult,unlabelStmt,hugeParam,singleCaseSwitch,builtinShadow,typeAssertChain ./...
+
+security: ## - Check go secure
+	gosec -exclude-dir=core -exclude=G101,G115 ./...
+
+vulncheck: ## - Check go vuln
+	govulncheck ./...
 
 test:
 	go test -v -timeout 30s -coverprofile=cover.out -cover ./...
@@ -62,5 +76,5 @@ docker.stop:
 docker.delete:
 	docker-compose -f docker/docker-compose.yml -p gfly down
 
-lib.update:
+upgrade:
 	go get -u all

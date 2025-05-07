@@ -12,33 +12,7 @@ Built on top of [FastHttp - the fastest HTTP engine](https://github.com/valyala/
 
 ### 2. Install Golang
 
-### 2.1 On Mac
-```bash
-# Install go at folder /Users/$USER/Apps
-mkdir -p /Users/$USER/Apps
-wget https://go.dev/dl/go1.24.2.darwin-arm64.tar.gz
-tar -xvzf go1.24.2.darwin-arm64.tar.gz
-```
-Add bottom of file `~/.profile` or `~/.zshrc`
-```bash
-vi ~/.profile
-
-# ----------- Golang -----------
-export GOROOT=/Users/$USER/Apps/go
-export GOPATH=/Users/$USER/go
-export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
-```
-Check
-```bash
-source ~/.profile
-# Or
-source ~/.zshrc
-
-# Check Go
-go version
-```
-
-### 2.2 On Linux
+### 2.1 On Linux
 ```bash
 # Install go at folder /home/$USER/Apps
 mkdir -p /home/$USER/Apps
@@ -64,34 +38,64 @@ source ~/.zshrc
 go version
 ```
 
-### 3. Install `Swag`, `Migrage`, `Lint`, and `Air`
+### 2.2 On Mac
 ```bash
-# Install swag
-go install github.com/swaggo/swag/cmd/swag@latest
+# Install go at folder /Users/$USER/Apps
+mkdir -p /Users/$USER/Apps
+wget https://go.dev/dl/go1.24.3.darwin-arm64.tar.gz
+tar -xvzf go1.24.3.darwin-arm64.tar.gz
+```
+Add bottom of file `~/.profile` or `~/.zshrc`
+```bash
+vi ~/.profile
 
-# Check Swag version
+# ----------- Golang -----------
+export GOROOT=/Users/$USER/Apps/go
+export GOPATH=/Users/$USER/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+```
+Check
+```bash
+source ~/.profile
+# Or
+source ~/.zshrc
+
+# Check Go
+go version
+```
+
+### 3. Install `Swag`, `Air`, `Migrage`, `Lint`, `GoSec`, `GoVulncheck`, and `GoCritic`
+```bash
+# ----- Install swag -----
+go install github.com/swaggo/swag/cmd/swag@latest
 swag -v
 
-# Install air
+# ----- Install air -----
 go install github.com/air-verse/air@latest
-
-# Check Air version
 air -v
 
-# Install migrate
+# ----- Install migrate -----
 go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
-
-# Check Migrate version
 migrate --version
 
-# Install Lint
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.0.2
-
-# Or (Fix error on Ubuntu)
-curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sudo sh -s -- -b $(go env GOPATH)/bin v2.0.2 && sudo chown $USER:$USER $(go env GOPATH)/bin/golangci-lint
-
-# Check Lint version
+# ----- Install Lint -----
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.1.6
 golangci-lint --version
+
+# Or (Ubuntu)
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sudo sh -s -- -b $(go env GOPATH)/bin v2.1.6 && sudo chown $USER:$USER $(go env GOPATH)/bin/golangci-lint
+
+# ----- Install GoSecure -----
+curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.22.3
+gosec version
+
+# ----- Install Go vulncheck -----
+go install golang.org/x/vuln/cmd/govulncheck@latest
+govulncheck --version
+
+# ----- Install Critic -----
+go install github.com/go-critic/go-critic/cmd/gocritic@latest
+gocritic version
 ```
 
 ### 4. Create project skeleton from `gFly` repository
@@ -185,11 +189,11 @@ Create a new command line `db-test`. Add file `app/console/commands/db_command.g
 package commands
 
 import (
-	"gfly/app/domain/models"
-	"github.com/gflydev/console"
-	"github.com/gflydev/core/log"
-	mb "github.com/gflydev/db"
-	"time"
+    "gfly/app/domain/models"
+    "github.com/gflydev/console"
+    "github.com/gflydev/core/log"
+    mb "github.com/gflydev/db"
+    "time"
 )
 
 // ---------------------------------------------------------------
@@ -199,7 +203,7 @@ import (
 
 // Auto-register command.
 func init() {
-	console.RegisterCommand(&DBCommand{}, "db-test")
+    console.RegisterCommand(&DBCommand{}, "db-test")
 }
 
 // ---------------------------------------------------------------
@@ -241,10 +245,10 @@ Create a new command line `redis-test`. Add file `app/console/commands/redis_com
 package commands
 
 import (
-	"github.com/gflydev/cache"
-	"github.com/gflydev/console"
-	"github.com/gflydev/core/log"
-	"time"
+    "github.com/gflydev/cache"
+    "github.com/gflydev/console"
+    "github.com/gflydev/core/log"
+    "time"
 )
 
 // ---------------------------------------------------------------
@@ -303,10 +307,10 @@ Create a new command line `mail-test`. Add file `app/console/commands/mail_comma
 package commands
 
 import (
-	"github.com/gflydev/cache"
-	"github.com/gflydev/console"
-	"github.com/gflydev/core/log"
-	"time"
+    "github.com/gflydev/cache"
+    "github.com/gflydev/console"
+    "github.com/gflydev/core/log"
+    "time"
 )
 
 // ---------------------------------------------------------------
