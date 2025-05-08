@@ -32,7 +32,7 @@ services:
     environment:
       MP_MAX_MESSAGES: 5000
       # No TLS
-      MP_SMTP_AUTH_ALLOW_INSECURE: true
+      MP_SMTP_AUTH_ALLOW_INSECURE: 'true'
       # TLS
       #MP_SMTP_TLS_CERT: /data/cert.pem
       #MP_SMTP_TLS_KEY: /data/key.pem
