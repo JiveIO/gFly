@@ -89,9 +89,12 @@ curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install
 curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.22.3
 gosec version
 
+# # Or (Ubuntu)
+curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sudo sh -s -- -b $(go env GOPATH)/bin v2.22.3 && sudo chown $USER:$USER $(go env GOPATH)/bin/gosec
+
 # ----- Install Go vulncheck -----
 go install golang.org/x/vuln/cmd/govulncheck@latest
-govulncheck --version
+govulncheck -version
 
 # ----- Install Critic -----
 go install github.com/go-critic/go-critic/cmd/gocritic@latest
