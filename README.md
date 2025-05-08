@@ -103,7 +103,7 @@ gocritic version
 
 ### 4. Create project skeleton from `gFly` repository
 ```bash
-git clone https://github.com/jiveio/gfly.git myweb
+git clone https://github.com/jivegroup/gfly.git myweb
 cd myweb 
 rm -rf .git* && cp .env.example .env
 ```
