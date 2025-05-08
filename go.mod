@@ -6,8 +6,8 @@ require (
 	github.com/gflydev/cache v1.0.5
 	github.com/gflydev/console v1.0.2
 	github.com/gflydev/core v1.13.4
-	github.com/gflydev/db v1.6.1
-	github.com/gflydev/db/psql v1.4.4
+	github.com/gflydev/db v1.6.2
+	github.com/gflydev/db/psql v1.4.5
 	github.com/gflydev/notification v1.0.2
 	github.com/gflydev/notification/mail v1.0.2
 	github.com/gflydev/session v1.0.2
@@ -16,7 +16,7 @@ require (
 	github.com/gflydev/storage/local v1.1.4
 	github.com/gflydev/view/pongo v1.0.3
 	github.com/hibiken/asynq v0.25.1
-	github.com/jiveio/fluentsql v1.5.1
+	github.com/jivegroup/fluentsql v1.5.2
 	github.com/joho/godotenv v1.5.1
 	github.com/swaggo/swag v1.16.4
 )

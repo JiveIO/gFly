@@ -2,7 +2,7 @@
 
 **Laravel inspired web framework written in Go**
 
-Built on top of [FastHttp - the fastest HTTP engine](https://github.com/valyala/fasthttp), [FluentSQL - flexible and powerful SQL builder](https://github.com/jiveio/fluentsql). Quick development with zero memory allocation and high performance. Very simple and easy to use.
+Built on top of [FastHttp - the fastest HTTP engine](https://github.com/valyala/fasthttp), [FluentSQL - flexible and powerful SQL builder](https://github.com/jivegroup/fluentsql). Quick development with zero memory allocation and high performance. Very simple and easy to use.
 
 # Tour of gFly
 

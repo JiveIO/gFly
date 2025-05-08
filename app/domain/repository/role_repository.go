@@ -6,8 +6,8 @@ import (
 	"github.com/gflydev/core/log"
 	"time"
 
-	mb "github.com/gflydev/db"       // Model builder
-	qb "github.com/jiveio/fluentsql" // Query builder
+	mb "github.com/gflydev/db"          // Model builder
+	qb "github.com/jivegroup/fluentsql" // Query builder
 )
 
 // ====================================================================
